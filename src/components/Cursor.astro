@@ -1,7 +1,7 @@
 ---
 // Свой курсор (только для мыши):
-// - кольцо с инверсией стоит точно под мышью, без задержки;
-// - вне превью за ним тянется светящаяся комета (canvas, аддитивное свечение);
+// - мышь стоит — видно кольцо с инверсией (точно под мышью, без задержки);
+// - мышь движется по фону — кольцо прячется, вместо него розово-сиреневая комета (canvas, аддитивное свечение);
 // - над [data-cursor="view"] кольцо становится белым кругом со стрелкой, над [data-cursor="copy"] — с иконкой копирования.
 ---
 
@@ -51,14 +51,21 @@
     let x = -200;
     let y = -200;
     let visible = false;
-    let cometAlpha = 0; // плавно гаснет над превью и при уходе мыши
+    let cometAlpha = 0; // плавно появляется в движении и гаснет при остановке
     let big = false;
+    let lastMove = -Infinity;
+    const MOVE_IDLE_MS = 120; // столько мс без движения — считаем, что мышь стоит
+    el.style.transition = 'opacity 0.2s ease-out';
+    el.style.opacity = '0';
     let dpr = 1;
 
+    // Размер видимой области без полосы прокрутки — так холст совпадает с координатами мыши
+    const vw = () => document.documentElement.clientWidth;
+    const vh = () => document.documentElement.clientHeight;
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(innerWidth * dpr);
-      canvas.height = Math.round(innerHeight * dpr);
+      canvas.width = Math.round(vw() * dpr);
+      canvas.height = Math.round(vh() * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     resize();
@@ -85,6 +92,7 @@
       y = e.clientY;
       place();
       visible = true;
+      lastMove = performance.now();
       el.classList.add('is-active');
       update(e.target as Element);
     });
@@ -98,10 +106,10 @@
 
     const glow = (cx: number, cy: number, r: number, a: number) => {
       const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      g.addColorStop(0, `rgba(235, 252, 255, ${0.95 * a})`);
-      g.addColorStop(0.18, `rgba(140, 225, 255, ${0.75 * a})`);
-      g.addColorStop(0.45, `rgba(70, 170, 255, ${0.22 * a})`);
-      g.addColorStop(1, 'rgba(40, 120, 255, 0)');
+      g.addColorStop(0, `rgba(255, 242, 250, ${0.95 * a})`);
+      g.addColorStop(0.18, `rgba(255, 165, 210, ${0.75 * a})`);
+      g.addColorStop(0.45, `rgba(205, 165, 255, ${0.22 * a})`);
+      g.addColorStop(1, 'rgba(170, 140, 255, 0)');
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -111,12 +119,16 @@
     const frame = (now: number) => {
       // Размер окна или масштаб могли поменяться без события resize
       const wantDpr = Math.min(window.devicePixelRatio || 1, 2);
-      if (canvas.width !== Math.round(innerWidth * wantDpr) || canvas.height !== Math.round(innerHeight * wantDpr)) resize();
+      if (canvas.width !== Math.round(vw() * wantDpr) || canvas.height !== Math.round(vh() * wantDpr)) resize();
       while (trail.length && now - trail[0].t > TRAIL_MS) trail.shift();
-      const target = visible && !big && !reduced ? 1 : 0;
-      cometAlpha += (target - cometAlpha) * 0.2;
+      // Стоит — видно кольцо; движется по фону — комета вместо кольца; над превью — большой круг
+      const moving = now - lastMove < MOVE_IDLE_MS;
+      const ringShown = visible && (big || !moving || reduced);
+      el.style.opacity = ringShown ? '1' : '0';
+      const target = visible && moving && !big && !reduced ? 1 : 0;
+      cometAlpha += (target - cometAlpha) * (target ? 0.35 : 0.15);
 
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.clearRect(0, 0, vw(), vh());
       if (cometAlpha > 0.01) {
         ctx.globalCompositeOperation = 'lighter';
         const pts = [...trail, { x, y, t: now }];
@@ -128,8 +140,12 @@
           const k = Math.max(0, 1 - age);
           if (k <= 0) continue;
           const a = k * k * 0.6 * cometAlpha;
-          ctx.strokeStyle = `rgba(120, 215, 255, ${a})`;
-          ctx.shadowColor = `rgba(60, 170, 255, ${a})`;
+          // Хвост: у конца сиреневый, к голове розовый
+          const r = Math.round(190 + 65 * k);
+          const g = Math.round(170 - 15 * k);
+          const b = Math.round(255 - 50 * k);
+          ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+          ctx.shadowColor = `rgba(${r}, ${Math.round(g * 0.8)}, ${b}, ${a})`;
           ctx.shadowBlur = 30 * k;
           ctx.lineWidth = 2 + 26 * Math.pow(k, 1.6);
           ctx.beginPath();
