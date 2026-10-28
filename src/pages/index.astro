@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CaseCard from '../components/CaseCard.astro';
+import ContactCta from '../components/ContactCta.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { facts, url } from '../data/site';
+
+const latest = (await getCollection('cases', (c) => c.data.home)).sort((a, b) => a.data.order - b.data.order).slice(0, 4);
+---
+
+<Base>
+  <section class="px-5 pb-12 pt-32 md:px-10 md:pt-44">
+    <h1 class="display max-w-[18ch] text-[clamp(2.4rem,6.2vw,6rem)]" data-reveal>
+      Продуктовый дизайнер из <em>Москвы</em>. Проектирую B2B-сервисы для банков и CRM, в которых сложное становится понятным.
+    </h1>
+
+    <dl class="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 md:mt-20 md:grid-cols-4" data-reveal style="--reveal-delay: 120ms">
+      {
+        facts.map((f) => (
+          <div>
+            <dt class="eyebrow">{f.label}</dt>
+            <dd class="mt-2 text-[15px] leading-snug">{f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="px-5 md:px-10" data-reveal>
+    <Placeholder caption="Портретное фото Марии, горизонтальное, на тёмном или насыщенном фоне" ratio="16 / 9" />
+  </section>
+
+  <section class="px-5 py-20 md:px-10 md:py-32">
+    <div class="flex items-end justify-between gap-6">
+      <h2 class="display text-4xl md:text-6xl" data-reveal>Последние <em>кейсы</em></h2>
+      <a href={url('/work')} class="link-line hidden pb-2 text-sm text-muted hover:text-fg sm:inline" data-reveal>Все работы →</a>
+    </div>
+    <div class="mt-12 grid gap-x-8 gap-y-16 md:mt-16 md:grid-cols-2">
+      {latest.map((item, i) => <CaseCard item={item} delay={(i % 2) * 120} />)}
+    </div>
+    <div class="mt-16 flex justify-center" data-reveal>
+      <a href={url('/work')} class="rounded-full border border-line px-7 py-3.5 text-sm transition-colors hover:border-fg/40">
+        Все работы
+      </a>
+    </div>
+  </section>
+
+  <ContactCta />
+</Base>

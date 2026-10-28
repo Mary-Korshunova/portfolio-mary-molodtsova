@@ -1,0 +1,180 @@
+---
+import Base from '../layouts/Base.astro';
+import { person, telegramUrl } from '../data/site';
+
+// Источник: резюме hh.ru (май 2025), обновлено на фамилию Молодцова.
+// Телефон, дату рождения и адрес не публикуем.
+const experience = [
+  {
+    period: 'Апрель 2024 — сейчас',
+    company: 'ПСБ (Промсвязьбанк)',
+    role: 'Продуктовый дизайнер',
+    text: 'Команда кредитов СМБ: интернет-банк «Мой бизнес» и мобильный банк «ПСБ Бизнес».',
+    points: [
+      'Подача заявок и отображение в ДБО новых кредитных продуктов «Бизнес-кредит», «СуперОвердрафт» и электронных банковских гарантий',
+      'Возобновляемая кредитная линия «Без бумаг | На развитие»: заявка, сопровождение, выдача транша, досрочное погашение',
+      'Загрузка документов в рамках финансового мониторинга в мобильном банке',
+      'Адаптивы сервиса подписания, кредитных разделов и заявки на досрочное погашение',
+      'Команда «Паттернов»: унифицирую UX-паттерны банка и пишу документацию для дизайнеров',
+      'Выступаю на дизайн-демо, участвую в демо команд и хакатонах',
+    ],
+  },
+  {
+    period: 'Июнь 2023 — апрель 2024',
+    company: 'amoCRM / Kommo',
+    role: 'UX/UI-дизайнер',
+    text: 'Интерфейсы CRM-системы amoCRM (Kommo — международная версия) и amo | корпоративный мессенджер.',
+    points: [
+      'Закрепы сообщений в чатах и ботах мессенджера (Desktop, Android, iOS)',
+      'Тёмная тема корпоративного мессенджера',
+      'Мобильная страница Paywall и новое поле баннера счёта',
+      'Kommo: установка кнопки чата на сайт через Google Tag Manager, List Messages для WhatsApp в шаге бота',
+      'Участвовала в создании дизайн-системы, собирала UI kit',
+      'Графика: email-рассылки, иконки, заглушки, лоадеры, страницы ошибок оплаты',
+    ],
+  },
+  {
+    period: 'Март 2022 — июнь 2023',
+    company: 'Центр «Карьера» МИИГАиК',
+    role: 'SMM-дизайнер',
+    text: 'Разработала айдентику центра, библиотеку шаблонов и руководство по стилю. Число подписчиков выросло на 34%.',
+    points: [],
+  },
+];
+
+const education = [
+  { year: '2025', title: 'Продукт. Исследования. Метрики', place: 'Formfactor' },
+  { year: '2023', title: 'Картография и геоинформатика', place: 'МИИГАиК, высшее' },
+  { year: '2023', title: 'Дизайн мобильных приложений', place: 'Skillbox' },
+  { year: '2022', title: 'UX-дизайн', place: 'Skillbox' },
+  { year: '2021', title: 'Веб-дизайн', place: 'Skillbox' },
+];
+
+const skills = [
+  'Figma', 'UX-исследования', 'Jobs To Be Done', 'Прототипирование', 'Продуктовые метрики', 'Дизайн-ревью',
+  'Адаптивный дизайн', 'Дизайн-системы', 'Анализ целевой аудитории', 'MVP', 'Моушн-дизайн', 'HTML',
+];
+---
+
+<Base title="Резюме" description="Резюме Марии Молодцовой: продуктовый дизайнер, опыт в банке и CRM.">
+  <section class="resume px-5 pt-32 md:px-10 md:pt-44">
+    <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+      <div data-reveal>
+        <h1 class="display text-[clamp(2.6rem,7vw,6.5rem)]">{person.name}</h1>
+        <p class="mt-4 text-lg text-muted">{person.role} · Москва · удалённо или гибрид</p>
+      </div>
+      <div class="flex flex-wrap gap-3 print:hidden" data-reveal>
+        <button
+          type="button"
+          onclick="window.print()"
+          class="rounded-full bg-fg px-6 py-3.5 text-sm font-medium text-bg transition-transform hover:scale-[1.04]"
+        >
+          Сохранить в PDF
+        </button>
+        <a href={telegramUrl} target="_blank" rel="noopener" class="rounded-full border border-line px-6 py-3.5 text-sm hover:border-fg/40">
+          Написать в Telegram
+        </a>
+      </div>
+    </div>
+
+    <p class="mt-8 hidden text-sm print:block">{person.email} · t.me/{person.telegram}</p>
+
+    <p class="mt-14 max-w-3xl text-xl leading-relaxed text-fg/85 md:text-2xl" data-reveal>
+      Продуктовый дизайнер с опытом в банковском B2B и CRM. Для меня важны не только эстетика, но и осмысленность
+      решений. Люблю аккуратность в макетах, вовлечённость в продукт и команду, которая стремится к качественному результату.
+    </p>
+
+    <h2 class="eyebrow mt-20 border-t border-line pt-6" data-reveal>Опыт · 4 года 8 месяцев</h2>
+    <div class="divide-y divide-line">
+      {
+        experience.map((job) => (
+          <div class="grid gap-4 py-10 md:grid-cols-[14rem_1fr] md:gap-10" data-reveal>
+            <p class="text-sm text-muted">{job.period}</p>
+            <div>
+              <h3 class="text-2xl font-normal tracking-tight">{job.company}</h3>
+              <p class="mt-1 text-muted">{job.role}</p>
+              <p class="mt-4 leading-relaxed text-fg/85">{job.text}</p>
+              {job.points.length > 0 && (
+                <ul class="mt-4 space-y-2 text-[15px] leading-relaxed text-fg/80">
+                  {job.points.map((p) => (
+                    <li class="relative pl-5 before:absolute before:left-0 before:top-[0.7em] before:h-px before:w-2.5 before:bg-accent">{p}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="grid gap-16 border-t border-line pt-6 md:grid-cols-2">
+      <div data-reveal>
+        <h2 class="eyebrow">Образование и курсы</h2>
+        <ul class="mt-6 space-y-4">
+          {
+            education.map((e) => (
+              <li class="grid grid-cols-[4rem_1fr] gap-4">
+                <span class="text-sm tabular-nums text-muted">{e.year}</span>
+                <span>
+                  {e.title}
+                  <span class="block text-sm text-muted">{e.place}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div data-reveal>
+        <h2 class="eyebrow">Навыки</h2>
+        <ul class="mt-6 flex flex-wrap gap-2">
+          {skills.map((s) => <li class="rounded-full border border-line px-3.5 py-1.5 text-sm">{s}</li>)}
+        </ul>
+        <h2 class="eyebrow mt-10">Языки</h2>
+        <p class="mt-4">Русский — родной · Английский — B1</p>
+      </div>
+    </div>
+  </section>
+  <div class="h-24"></div>
+</Base>
+
+<style is:global>
+  @media print {
+    @page {
+      margin: 14mm;
+    }
+    html,
+    body {
+      background: #fff !important;
+      color: #111 !important;
+    }
+    header[data-header],
+    footer,
+    [data-preloader] {
+      display: none !important;
+    }
+    .resume {
+      padding: 0 !important;
+    }
+    .resume * {
+      color: #111 !important;
+      border-color: #ddd !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .resume .text-muted,
+    .resume .eyebrow {
+      color: #666 !important;
+    }
+    .resume h1 {
+      font-size: 32pt !important;
+    }
+    .resume .py-10 {
+      padding-block: 12pt !important;
+      break-inside: avoid;
+    }
+    .resume .mt-20,
+    .resume .mt-14 {
+      margin-top: 16pt !important;
+    }
+  }
+</style>

@@ -1,0 +1,30 @@
+---
+import { person, telegramUrl, url } from '../data/site';
+---
+
+<section class="px-5 pb-16 pt-24 md:px-10 md:pb-24 md:pt-40">
+  <p class="eyebrow" data-reveal>Давайте работать вместе</p>
+  <a
+    href={`mailto:${person.email}`}
+    class="display mt-6 block break-words text-[clamp(1.75rem,6.4vw,6.5rem)] transition-colors hover:text-accent"
+    data-reveal
+  >
+    {person.email}
+  </a>
+  <div class="mt-10 flex flex-wrap gap-3" data-reveal>
+    <a
+      href={telegramUrl}
+      target="_blank"
+      rel="noopener"
+      class="rounded-full bg-fg px-6 py-3.5 text-sm font-medium text-bg transition-transform duration-300 hover:scale-[1.04]"
+    >
+      Telegram @{person.telegram}
+    </a>
+    <a
+      href={url('/resume')}
+      class="rounded-full border border-line px-6 py-3.5 text-sm transition-colors hover:border-fg/40"
+    >
+      Резюме
+    </a>
+  </div>
+</section>

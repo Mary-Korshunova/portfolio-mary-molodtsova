@@ -1,0 +1,132 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CaseCard from '../../components/CaseCard.astro';
+import ContactCta from '../../components/ContactCta.astro';
+import { person } from '../../data/site';
+
+const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
+const uniq = <T,>(xs: T[]) => [...new Set(xs)];
+
+const groups = [
+  { key: 'year', label: 'Год', options: uniq(cases.map((c) => String(c.data.year))).sort().reverse() },
+  { key: 'platform', label: 'Платформа', options: uniq(cases.flatMap((c) => c.data.platforms)) },
+  { key: 'org', label: 'Организация', options: uniq(cases.map((c) => c.data.org)) },
+  { key: 'format', label: 'Формат', options: uniq(cases.map((c) => c.data.format)) },
+];
+---
+
+<Base title="Работы" description="Все кейсы Марии Молодцовой: банковские сервисы, CRM, мессенджеры и лендинги.">
+  <section class="px-5 pt-32 md:px-10 md:pt-44">
+    <h1 class="display text-[clamp(2.6rem,7vw,6.5rem)]" data-reveal>Все <em>работы</em></h1>
+    <p class="mt-6 max-w-xl text-muted" data-reveal>
+      Продуктовые кейсы и фичи для банков, CRM и мессенджеров. Названия банков скрыты из-за NDA.
+    </p>
+  </section>
+
+  <section class="px-5 pt-14 md:px-10" data-filters data-reveal>
+    <div class="grid gap-6 border-y border-line py-6 lg:grid-cols-4">
+      {
+        groups.map((g) => (
+          <div role="group" aria-label={g.label}>
+            <p class="eyebrow mb-3">{g.label}</p>
+            <div class="flex flex-wrap gap-2">
+              {g.options.map((o) => (
+                <button
+                  type="button"
+                  class="rounded-full border border-line px-3.5 py-1.5 text-sm text-muted transition-colors hover:border-fg/40 hover:text-fg aria-pressed:border-fg aria-pressed:bg-fg aria-pressed:text-bg"
+                  aria-pressed="false"
+                  data-key={g.key}
+                  data-value={o}
+                >
+                  {o}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class="mt-4 flex items-center justify-between text-sm text-muted">
+      <p aria-live="polite"><span data-count>{cases.length}</span> из {cases.length}</p>
+      <button type="button" class="link-line hidden hover:text-fg" data-reset>Сбросить фильтры</button>
+    </div>
+  </section>
+
+  <section class="px-5 pb-10 pt-12 md:px-10">
+    <div class="grid gap-x-8 gap-y-16 md:grid-cols-2" data-grid>
+      {cases.map((item, i) => <CaseCard item={item} delay={(i % 2) * 120} />)}
+    </div>
+    <div class="hidden py-20 text-center" data-empty>
+      <p class="text-lg">Таких кейсов пока нет.</p>
+      <button type="button" class="mt-4 rounded-full border border-line px-6 py-3 text-sm hover:border-fg/40" data-reset>
+        Сбросить фильтры
+      </button>
+    </div>
+  </section>
+
+  <section class="px-5 pt-16 md:px-10">
+    <div class="flex flex-col gap-6 rounded-2xl border border-line p-8 md:flex-row md:items-center md:justify-between md:p-12" data-reveal>
+      <div>
+        <p class="eyebrow">Архив</p>
+        <h2 class="mt-3 text-2xl font-normal tracking-tight md:text-3xl">Ранние работы и фриланс</h2>
+        <p class="mt-3 max-w-xl text-muted">
+          Коммерческие сайты, лендинги и UX/UI-проекты до перехода в продуктовый дизайн. Это мой путь, но уже не мой текущий уровень.
+        </p>
+      </div>
+      <a
+        href={person.behance}
+        target="_blank"
+        rel="noopener"
+        class="shrink-0 rounded-full bg-fg px-6 py-3.5 text-center text-sm font-medium text-bg transition-transform hover:scale-[1.04]"
+      >
+        Архив на Behance →
+      </a>
+    </div>
+  </section>
+
+  <ContactCta />
+</Base>
+
+<script>
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-filters] [data-key]')];
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-grid] [data-case]')];
+  const count = document.querySelector('[data-count]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const resets = document.querySelectorAll<HTMLElement>('[data-reset]');
+  const active: Record<string, string | null> = {};
+
+  const matches = (card: HTMLElement, key: string, value: string) =>
+    (card.dataset[key] ?? '').split('|').includes(value);
+
+  const apply = () => {
+    let shown = 0;
+    for (const card of cards) {
+      const ok = Object.entries(active).every(([k, v]) => !v || matches(card, k, v));
+      card.hidden = !ok;
+      if (ok) {
+        card.classList.add('is-in');
+        shown++;
+      }
+    }
+    count.textContent = String(shown);
+    empty.classList.toggle('hidden', shown > 0);
+    const any = Object.values(active).some(Boolean);
+    resets[0]?.classList.toggle('hidden', !any);
+    for (const b of buttons) b.setAttribute('aria-pressed', String(active[b.dataset.key!] === b.dataset.value));
+  };
+
+  for (const b of buttons) {
+    b.addEventListener('click', () => {
+      const key = b.dataset.key!;
+      active[key] = active[key] === b.dataset.value ? null : b.dataset.value!;
+      apply();
+    });
+  }
+  resets.forEach((r) =>
+    r.addEventListener('click', () => {
+      for (const k of Object.keys(active)) active[k] = null;
+      apply();
+    }),
+  );
+</script>

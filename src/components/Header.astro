@@ -1,0 +1,86 @@
+---
+import { nav, person, telegramUrl, url } from '../data/site';
+
+const current = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+const isActive = (href: string) => current === href || current.startsWith(href + '/');
+---
+
+<header class="fixed inset-x-0 top-0 z-50 px-5 py-4 md:px-10 md:py-5" data-header>
+  <div
+    class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-bg/90 to-transparent backdrop-blur-[2px]"
+  >
+  </div>
+  <div class="flex items-center justify-between gap-6">
+    <a href={url('/')} class="text-[15px] font-medium tracking-tight">{person.name}</a>
+
+    <nav class="hidden items-center gap-8 text-sm md:flex" aria-label="Основная навигация">
+      {
+        nav.map((item) => (
+          <a
+            href={url(item.href)}
+            class:list={['link-line transition-colors', isActive(item.href) ? 'text-fg' : 'text-muted hover:text-fg']}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={telegramUrl}
+        target="_blank"
+        rel="noopener"
+        class="hidden rounded-full bg-fg px-5 py-2.5 text-sm font-medium text-bg transition-transform duration-300 hover:scale-[1.04] sm:inline-flex"
+      >
+        Написать мне
+      </a>
+      <button
+        type="button"
+        class="relative grid size-10 place-items-center md:hidden"
+        aria-label="Открыть меню"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-toggle
+      >
+        <span class="block h-px w-6 bg-fg transition-transform duration-300 [[aria-expanded=true]_&]:translate-y-[3.5px] [[aria-expanded=true]_&]:rotate-45"></span>
+        <span class="absolute block h-px w-6 translate-y-[7px] bg-fg transition-transform duration-300 [[aria-expanded=true]_&]:translate-y-[3.5px] [[aria-expanded=true]_&]:-rotate-45"></span>
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="mobile-menu"
+    class="invisible fixed inset-0 -z-20 flex flex-col justify-between bg-bg px-5 pb-10 pt-28 opacity-0 transition-[opacity,visibility] duration-500 md:hidden [&.is-open]:visible [&.is-open]:opacity-100"
+    data-menu
+  >
+    <nav class="flex flex-col gap-2" aria-label="Мобильная навигация">
+      <a href={url('/')} class="display text-5xl">Главная</a>
+      {nav.map((item) => <a href={url(item.href)} class="display text-5xl">{item.label}</a>)}
+    </nav>
+    <div class="flex flex-col gap-4">
+      <a href={telegramUrl} target="_blank" rel="noopener" class="rounded-full bg-fg px-6 py-4 text-center font-medium text-bg">
+        Написать в Telegram
+      </a>
+      <a href={`mailto:${person.email}`} class="text-center text-muted">{person.email}</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const setOpen = (open: boolean) => {
+    if (!toggle || !menu) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    menu.classList.toggle('is-open', open);
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    const lenis = (window as any).__lenis;
+    open ? lenis?.stop() : lenis?.start();
+  };
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+</script>

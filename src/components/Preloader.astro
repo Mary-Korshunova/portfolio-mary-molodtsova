@@ -1,0 +1,36 @@
+---
+import { person } from '../data/site';
+---
+
+<!-- Показывается один раз за сессию. Без JS скрыт (класс .js не добавится). -->
+<div
+  class="pointer-events-none fixed inset-0 z-[100] hidden flex-col justify-between bg-bg px-5 py-6 transition-transform duration-[900ms] ease-[cubic-bezier(0.76,0,0.24,1)] md:px-10 md:py-8 [.js_&]:flex [&.is-done]:-translate-y-full"
+  data-preloader
+  aria-hidden="true"
+>
+  <p class="text-sm text-muted">{person.name}</p>
+  <p class="display self-end text-[22vw] leading-none tabular-nums md:text-[14vw]"><span data-preloader-count>0</span>%</p>
+</div>
+
+<script is:inline>
+  (function () {
+    var el = document.querySelector('[data-preloader]');
+    if (!el) return;
+    var seen = false;
+    try { seen = sessionStorage.getItem('preloader-seen') === '1'; } catch (e) {}
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (seen || reduced) { el.remove(); return; }
+    try { sessionStorage.setItem('preloader-seen', '1'); } catch (e) {}
+    var count = el.querySelector('[data-preloader-count]');
+    var start = performance.now();
+    var duration = 1300;
+    function step(now) {
+      var t = Math.min(1, (now - start) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      count.textContent = String(Math.round(eased * 100));
+      if (t < 1) requestAnimationFrame(step);
+      else setTimeout(function () { el.classList.add('is-done'); }, 150);
+    }
+    requestAnimationFrame(step);
+  })();
+</script>

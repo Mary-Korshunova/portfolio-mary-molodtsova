@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { person, telegramUrl, url } from '../data/site';
+
+const links = [
+  { label: 'Почта', value: person.email, href: `mailto:${person.email}` },
+  { label: 'Telegram', value: `@${person.telegram}`, href: telegramUrl, external: true },
+  { label: 'Резюме', value: 'Открыть резюме', href: url('/resume') },
+  { label: 'Behance', value: 'Архив ранних работ', href: person.behance, external: true },
+];
+---
+
+<Base title="Контакты" description="Как связаться с Марией Молодцовой: почта и Telegram.">
+  <section class="px-5 pb-24 pt-32 md:px-10 md:pt-44">
+    <h1 class="display max-w-[14ch] text-[clamp(2.6rem,7vw,6.5rem)]" data-reveal>Давайте <em>поговорим</em></h1>
+    <p class="mt-6 max-w-xl text-lg text-muted" data-reveal>
+      Открыта к предложениям о работе в продуктовых командах, удалённо или в гибридном формате. Быстрее всего отвечаю в Telegram.
+    </p>
+
+    <ul class="mt-16 border-t border-line md:mt-24">
+      {
+        links.map((l, i) => (
+          <li class="border-b border-line" data-reveal style={`--reveal-delay: ${i * 80}ms`}>
+            <a
+              href={l.href}
+              target={l.external ? '_blank' : undefined}
+              rel={l.external ? 'noopener' : undefined}
+              class="group flex flex-col gap-2 py-8 md:flex-row md:items-baseline md:justify-between"
+            >
+              <span class="eyebrow">{l.label}</span>
+              <span class="break-all text-[clamp(1.4rem,3.6vw,3rem)] font-light tracking-tight transition-colors group-hover:text-accent">
+                {l.value} <span class="inline-block transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

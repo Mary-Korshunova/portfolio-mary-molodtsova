@@ -44,7 +44,22 @@
 
 ## Стек
 
-_Пока не выбран — будет зафиксирован здесь после заполнения `docs/SPEC.md` (команда `/plan-features`)._
+- **Astro 5** (не 6+: на машине Node 20, а новые версии Astro требуют Node 22) + **Tailwind CSS v4**.
+  `vite@6` закреплён в devDependencies, иначе `@tailwindcss/vite` тянет Vite 8 и сборка ломается.
+- Lenis — плавный скролл; появление блоков — атрибут `data-reveal` (см. `src/layouts/Base.astro`).
+- Шрифт Montserrat локально через Fontsource. Токены цветов — `@theme` в `src/styles/global.css`.
+- Кейсы: `src/content/cases/<slug>.md`, схема в `src/content.config.ts`. Новый кейс = новый файл.
+  `content/cases-source/` — сырые копии из Yonote, на сайт не попадают.
+- Контакты, факты и навигация: `src/data/site.ts`. Внутренние ссылки — только через `url()` (сайт в подпапке).
+- Заглушки картинок: компонент `Placeholder` или `<figure class="ph">` в markdown, подпись = что должно быть.
+- Dev: `npm run dev` → http://localhost:4321/portfolio-mary-molodtsova/ · сборка: `npm run build`.
+- Деплой: push в `main` → GitHub Actions (`.github/workflows/deploy.yml`) → GitHub Pages.
+
+## NDA
+
+В кейсах, карточках и фильтрах банк не называется (только «Банк»), его дочерние компании тоже.
+ПСБ можно упоминать только на `/resume`. Перед коммитом: `grep -rn "ПСБ" src/content dist/work`
+должен быть пустым.
 
 ## Общение
 

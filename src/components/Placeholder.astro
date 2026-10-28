@@ -1,0 +1,26 @@
+---
+// Рамка на месте будущей картинки. Подпись говорит, что должно быть на этом месте.
+interface Props {
+  caption: string;
+  ratio?: string;
+  class?: string;
+  zoom?: boolean;
+}
+const { caption, ratio = '16 / 10', class: className, zoom = false } = Astro.props;
+---
+
+<figure class:list={['ph !m-0', className]}>
+  <div class="ph-box" style={`aspect-ratio: ${ratio}`}>
+    <div
+      class:list={[
+        'absolute inset-0 flex items-center justify-center p-6 text-center transition-transform duration-700 ease-out-soft',
+        zoom && 'group-hover:scale-[1.04]',
+      ]}
+    >
+      <span class="max-w-sm text-sm leading-relaxed text-muted">
+        <span class="eyebrow mb-2 block">Заглушка</span>
+        {caption}
+      </span>
+    </div>
+  </div>
+</figure>
