@@ -11,7 +11,7 @@ const cases = defineCollection({
     org: z.string(),
     year: z.number(),
     platforms: z.array(z.string()),
-    format: z.enum(['Фича', 'Лендинг', 'Паттерн', 'Редполитика', 'ИИ-прототип']),
+    format: z.enum(['Сервис', 'Фича', 'Лендинг', 'Паттерн', 'Редполитика', 'ИИ-прототип']),
     home: z.boolean().default(false),
     order: z.number(),
     // Подпись к заглушке обложки — что должно быть на картинке.

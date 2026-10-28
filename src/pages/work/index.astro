@@ -13,7 +13,7 @@ const groups = [
   { key: 'platform', label: 'Платформа', options: uniq(cases.flatMap((c) => c.data.platforms)) },
   { key: 'org', label: 'Организация', options: uniq(cases.map((c) => c.data.org)) },
   // Форматы показываем всегда, даже если кейсов в них пока нет.
-  { key: 'format', label: 'Формат', options: ['Фича', 'Лендинг', 'Паттерн', 'Редполитика'] },
+  { key: 'format', label: 'Формат', options: ['Сервис', 'Фича', 'Лендинг', 'Паттерн', 'Редполитика'] },
 ];
 ---
 
