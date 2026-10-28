@@ -47,6 +47,9 @@
     document.documentElement.classList.add('has-cursor');
     const ctx = canvas.getContext('2d')!;
     const TRAIL_MS = 260; // длина хвоста по времени
+    const MOVE_IDLE_MS = 120; // столько мс без движения — считаем, что мышь стоит
+    const STEP = 5; // шаг точек хвоста, px
+    const MAX_DOTS = 90;
     const trail: { x: number; y: number; t: number }[] = [];
     let x = -200;
     let y = -200;
@@ -54,22 +57,50 @@
     let cometAlpha = 0; // плавно появляется в движении и гаснет при остановке
     let big = false;
     let lastMove = -Infinity;
-    const MOVE_IDLE_MS = 120; // столько мс без движения — считаем, что мышь стоит
+    // Область, нарисованная в прошлом кадре: очищаем только её, а не весь экран
+    let dirty: [number, number, number, number] | null = null;
     el.style.transition = 'opacity 0.2s ease-out';
     el.style.opacity = '0';
-    let dpr = 1;
 
-    // Размер видимой области без полосы прокрутки — так холст совпадает с координатами мыши
+    // Свечение мягкое, повышенная чёткость ему не нужна: холст всегда в 1× (в 4 раза меньше пикселей на Retina)
     const vw = () => document.documentElement.clientWidth;
     const vh = () => document.documentElement.clientHeight;
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(vw() * dpr);
-      canvas.height = Math.round(vh() * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      canvas.width = vw();
+      canvas.height = vh();
+      dirty = null;
     };
     resize();
     addEventListener('resize', resize);
+
+    // Готовые спрайты свечения: рисуются один раз, потом только копируются (drawImage) — без размытия в каждом кадре
+    const sprite = (size: number, stops: [number, string][]) => {
+      const c = document.createElement('canvas');
+      c.width = c.height = size;
+      const g = c.getContext('2d')!;
+      const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      for (const [o, col] of stops) grad.addColorStop(o, col);
+      g.fillStyle = grad;
+      g.fillRect(0, 0, size, size);
+      return c;
+    };
+    const HEAD = sprite(256, [
+      [0, 'rgba(255, 244, 250, 1)'],
+      [0.12, 'rgba(255, 190, 222, 0.95)'],
+      [0.3, 'rgba(255, 150, 205, 0.45)'],
+      [0.6, 'rgba(205, 165, 255, 0.12)'],
+      [1, 'rgba(170, 140, 255, 0)'],
+    ]);
+    const DOT_PINK = sprite(64, [
+      [0, 'rgba(255, 200, 228, 0.9)'],
+      [0.35, 'rgba(255, 150, 205, 0.45)'],
+      [1, 'rgba(255, 150, 205, 0)'],
+    ]);
+    const DOT_LILAC = sprite(64, [
+      [0, 'rgba(225, 205, 255, 0.85)'],
+      [0.35, 'rgba(190, 165, 255, 0.4)'],
+      [1, 'rgba(170, 140, 255, 0)'],
+    ]);
 
     const update = (target: Element | null) => {
       const mode = target?.closest<HTMLElement>('[data-cursor]')?.dataset.cursor;
@@ -80,19 +111,17 @@
       el.classList.toggle('is-link', !big && !!target?.closest('a, button, [data-copy]'));
     };
 
-    const place = () => {
-      el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    };
-
     addEventListener('pointermove', (e) => {
       // Позиция обновляется сразу на событии — курсор не отстаёт от мыши
-      const events = e.getCoalescedEvents?.() ?? [e];
-      for (const ev of events.length ? events : [e]) trail.push({ x: ev.clientX, y: ev.clientY, t: performance.now() });
+      const now = performance.now();
+      const events = e.getCoalescedEvents?.() ?? [];
+      if (events.length) for (const ev of events) trail.push({ x: ev.clientX, y: ev.clientY, t: now });
+      else trail.push({ x: e.clientX, y: e.clientY, t: now });
       x = e.clientX;
       y = e.clientY;
-      place();
+      el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       visible = true;
-      lastMove = performance.now();
+      lastMove = now;
       el.classList.add('is-active');
       update(e.target as Element);
     });
@@ -104,61 +133,70 @@
     addEventListener('pointerup', () => el.classList.remove('is-down'));
     addEventListener('scroll', () => update(document.elementFromPoint(x, y)), { passive: true });
 
-    const glow = (cx: number, cy: number, r: number, a: number) => {
-      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      g.addColorStop(0, `rgba(255, 242, 250, ${0.95 * a})`);
-      g.addColorStop(0.18, `rgba(255, 165, 210, ${0.75 * a})`);
-      g.addColorStop(0.45, `rgba(205, 165, 255, ${0.22 * a})`);
-      g.addColorStop(1, 'rgba(170, 140, 255, 0)');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.fill();
+    let minX = 0, minY = 0, maxX = 0, maxY = 0;
+    const blit = (img: HTMLCanvasElement, cx: number, cy: number, r: number, a: number) => {
+      ctx.globalAlpha = a;
+      ctx.drawImage(img, cx - r, cy - r, r * 2, r * 2);
+      if (cx - r < minX) minX = cx - r;
+      if (cy - r < minY) minY = cy - r;
+      if (cx + r > maxX) maxX = cx + r;
+      if (cy + r > maxY) maxY = cy + r;
     };
 
     const frame = (now: number) => {
-      // Размер окна или масштаб могли поменяться без события resize
-      const wantDpr = Math.min(window.devicePixelRatio || 1, 2);
-      if (canvas.width !== Math.round(vw() * wantDpr) || canvas.height !== Math.round(vh() * wantDpr)) resize();
+      if (canvas.width !== vw() || canvas.height !== vh()) resize();
       while (trail.length && now - trail[0].t > TRAIL_MS) trail.shift();
+
       // Стоит — видно кольцо; движется по фону — комета вместо кольца; над превью — большой круг
       const moving = now - lastMove < MOVE_IDLE_MS;
       const ringShown = visible && (big || !moving || reduced);
-      el.style.opacity = ringShown ? '1' : '0';
+      const op = ringShown ? '1' : '0';
+      if (el.style.opacity !== op) el.style.opacity = op;
       const target = visible && moving && !big && !reduced ? 1 : 0;
-      cometAlpha += (target - cometAlpha) * (target ? 0.35 : 0.15);
+      cometAlpha += (target - cometAlpha) * (target ? 0.35 : 0.28);
 
-      ctx.clearRect(0, 0, vw(), vh());
+      if (dirty) {
+        ctx.clearRect(dirty[0], dirty[1], dirty[2], dirty[3]);
+        dirty = null;
+      }
+
       if (cometAlpha > 0.01) {
         ctx.globalCompositeOperation = 'lighter';
-        const pts = [...trail, { x, y, t: now }];
-        const n = pts.length;
-        // Хвост: от старых точек к голове толщина и яркость растут
-        ctx.lineCap = 'round';
-        for (let i = 1; i < n; i++) {
-          const age = (now - pts[i].t) / TRAIL_MS;
-          const k = Math.max(0, 1 - age);
-          if (k <= 0) continue;
-          const a = k * k * 0.6 * cometAlpha;
-          // Хвост: у конца сиреневый, к голове розовый
-          const r = Math.round(190 + 65 * k);
-          const g = Math.round(170 - 15 * k);
-          const b = Math.round(255 - 50 * k);
-          ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-          ctx.shadowColor = `rgba(${r}, ${Math.round(g * 0.8)}, ${b}, ${a})`;
-          ctx.shadowBlur = 30 * k;
-          ctx.lineWidth = 2 + 26 * Math.pow(k, 1.6);
-          ctx.beginPath();
-          ctx.moveTo(pts[i - 1].x, pts[i - 1].y);
-          ctx.lineTo(pts[i].x, pts[i].y);
-          ctx.stroke();
+        minX = minY = Infinity;
+        maxX = maxY = -Infinity;
+
+        // Хвост: точки вдоль пути мыши, к голове крупнее, ярче и розовее
+        const pts = trail;
+        let dots = 0;
+        for (let i = 1; i < pts.length && dots < MAX_DOTS; i++) {
+          const a0 = pts[i - 1];
+          const a1 = pts[i];
+          const len = Math.hypot(a1.x - a0.x, a1.y - a0.y);
+          const steps = Math.max(1, Math.ceil(len / STEP));
+          for (let s = 0; s < steps && dots < MAX_DOTS; s++, dots++) {
+            const f = s / steps;
+            const px = a0.x + (a1.x - a0.x) * f;
+            const py = a0.y + (a1.y - a0.y) * f;
+            const t = a0.t + (a1.t - a0.t) * f;
+            const k = 1 - (now - t) / TRAIL_MS;
+            if (k <= 0) continue;
+            const r = 6 + 22 * k * k;
+            const a = k * k * 0.55 * cometAlpha;
+            blit(DOT_LILAC, px, py, r, a * (1 - k));
+            blit(DOT_PINK, px, py, r, a * k);
+          }
         }
-        ctx.shadowBlur = 0;
-        // Голова кометы — яркое ядро и мягкий ореол, ровно под курсором
-        const speed = n > 2 ? Math.hypot(x - pts[0].x, y - pts[0].y) : 0;
-        glow(x, y, 58 + Math.min(speed, 260) * 0.08, cometAlpha);
-        glow(x, y, 170, 0.38 * cometAlpha);
+
+        // Голова — ровно под курсором; чем быстрее движение, тем крупнее ореол
+        const tail = pts[0];
+        const speed = tail ? Math.hypot(x - tail.x, y - tail.y) : 0;
+        blit(HEAD, x, y, 70 + Math.min(speed, 300) * 0.1, cometAlpha);
+        blit(HEAD, x, y, 160, 0.3 * cometAlpha);
+
+        ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'source-over';
+        const pad = 2;
+        dirty = [Math.floor(minX) - pad, Math.floor(minY) - pad, Math.ceil(maxX - minX) + pad * 2, Math.ceil(maxY - minY) + pad * 2];
       }
       requestAnimationFrame(frame);
     };

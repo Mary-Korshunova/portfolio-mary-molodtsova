@@ -1,21 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
+import CopyEmail from '../components/CopyEmail.astro';
 import { person, telegramUrl, url } from '../data/site';
 
 const links = [
   { label: 'Telegram', value: `@${person.telegram}`, href: telegramUrl, external: true },
   { label: 'Резюме', value: 'Смотреть резюме', href: url('/resume') },
-  { label: 'Behance', value: 'Архив ранних работ', href: person.behance, external: true },
 ];
-const rowValue = 'text-[clamp(1.4rem,3.6vw,3rem)] font-light tracking-tight transition-colors group-hover:text-accent';
+const rowValue = 'text-[clamp(1.4rem,3.6vw,3rem)] font-light tracking-tight';
 ---
 
-<Base title="Контакты" description="Как связаться с Марией Молодцовой: Telegram, резюме и почта.">
+<Base title="Контакты" description="Мария Молодцова открыта к предложениям о работе. Telegram, почта, резюме.">
   <section class="px-5 pb-24 pt-32 md:px-10 md:pt-44">
-    <h1 class="display max-w-[14ch] text-[clamp(2.6rem,7vw,6.5rem)]" data-reveal>Давайте <em>поговорим</em></h1>
-    <p class="mt-6 max-w-xl text-lg text-muted" data-reveal>
-      Открыта к предложениям о работе в продуктовых командах, удалённо или в гибридном формате. Быстрее всего отвечаю в Telegram.
-    </p>
+    <h1 class="display max-w-[16ch] text-[clamp(2.6rem,7vw,6.5rem)]" data-reveal>Открыта к предложениям о <em>работе</em></h1>
 
     <ul class="mt-16 border-t border-line md:mt-24">
       {
@@ -28,22 +25,16 @@ const rowValue = 'text-[clamp(1.4rem,3.6vw,3rem)] font-light tracking-tight tran
               class="group flex flex-col gap-2 py-8 md:flex-row md:items-baseline md:justify-between"
             >
               <span class="eyebrow">{l.label}</span>
-              <span class={rowValue}>
+              <span class:list={[rowValue, 'transition-colors group-hover:text-accent']}>
                 {l.value} <span class="inline-block transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
               </span>
             </a>
           </li>
         ))
       }
-      <li class="border-b border-line" data-reveal style="--reveal-delay: 240ms">
-        <button
-          type="button"
-          class="group flex w-full flex-col gap-2 py-8 text-left md:flex-row md:items-baseline md:justify-between"
-          data-copy={person.email}
-        >
-          <span class="eyebrow">Почта · нажмите, чтобы скопировать</span>
-          <span class:list={[rowValue, 'break-all text-[clamp(1.1rem,2.4vw,2rem)]']}>{person.email}</span>
-        </button>
+      <li class="flex flex-col gap-2 border-b border-line py-8 md:flex-row md:items-baseline md:justify-between" data-reveal style="--reveal-delay: 160ms">
+        <span class="eyebrow">Почта</span>
+        <CopyEmail class={rowValue} />
       </li>
     </ul>
   </section>

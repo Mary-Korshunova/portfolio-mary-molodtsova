@@ -8,7 +8,7 @@ const isActive = (href: string) => current === href || current.startsWith(href +
 
 <header class="fixed inset-x-0 top-0 z-50 px-5 py-4 md:px-10 md:py-5" data-header>
   <div
-    class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-bg/90 to-transparent backdrop-blur-[2px]"
+    class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-bg/95 via-bg/70 to-transparent"
   >
   </div>
   <div class="flex items-center justify-between gap-6">
@@ -67,7 +67,7 @@ const isActive = (href: string) => current === href || current.startsWith(href +
       <a href={telegramUrl} target="_blank" rel="noopener" class="rounded-full bg-fg px-6 py-4 text-center font-medium text-bg">
         Написать в Telegram
       </a>
-      <CopyEmail class="justify-center self-center text-muted" />
+      <CopyEmail class="self-center text-center text-muted" />
     </div>
   </div>
 </header>

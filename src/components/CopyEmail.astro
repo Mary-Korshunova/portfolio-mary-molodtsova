@@ -1,4 +1,5 @@
 ---
+// Почта — одинаково везде: при наведении подчёркивание и курсор «копировать», по клику копирование и тост «Скопировано».
 import { person } from '../data/site';
 
 interface Props {
@@ -9,14 +10,14 @@ const { class: className } = Astro.props;
 
 <button
   type="button"
-  class:list={['group inline-flex items-center gap-2 text-left transition-colors hover:text-fg', className]}
+  class:list={['group block max-w-full break-words text-left', className]}
   data-copy={person.email}
-  title="Скопировать почту"
+  data-cursor="copy"
+  aria-label={`Скопировать почту ${person.email}`}
 >
-  <span class="link-line">{person.email}</span>
-  <svg viewBox="0 0 24 24" class="size-4 shrink-0 fill-none stroke-current opacity-60 group-hover:opacity-100" stroke-width="1.5" aria-hidden="true">
-    <rect x="9" y="9" width="11" height="11" rx="2"></rect>
-    <path d="M5 15V6a2 2 0 0 1 2-2h8"></path>
-  </svg>
-  <span class="sr-only">— скопировать</span>
+  <span
+    class="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_0.05em] bg-left-bottom bg-no-repeat pb-[0.06em] transition-[background-size] duration-700 ease-out-soft group-hover:bg-[length:100%_0.05em]"
+  >
+    {person.email}
+  </span>
 </button>

@@ -50,7 +50,14 @@ const groups = [
     </div>
     <div class="mt-4 flex items-center justify-between text-sm text-muted">
       <p aria-live="polite"><span data-count>{cases.length}</span> из {cases.length}</p>
-      <button type="button" class="link-line hidden hover:text-fg" data-reset>Сбросить фильтры</button>
+      <button
+        type="button"
+        class="link-line text-fg transition-opacity hover:text-accent disabled:pointer-events-none disabled:opacity-35"
+        disabled
+        data-reset
+      >
+        Сбросить все фильтры
+      </button>
     </div>
   </section>
 
@@ -58,8 +65,8 @@ const groups = [
     <CaseGrid items={cases} />
     <div class="hidden py-20 text-center" data-empty>
       <p class="text-lg">Кейсы скоро появятся</p>
-      <button type="button" class="mt-4 rounded-full border border-line px-6 py-3 text-sm hover:border-fg/40" data-reset>
-        Сбросить фильтры
+      <button type="button" class="link-line mt-4 text-sm text-fg hover:text-accent" data-reset>
+        Сбросить все фильтры
       </button>
     </div>
   </section>
@@ -92,7 +99,7 @@ const groups = [
   const cards = [...document.querySelectorAll<HTMLElement>('[data-grid] [data-case]')];
   const count = document.querySelector('[data-count]')!;
   const empty = document.querySelector<HTMLElement>('[data-empty]')!;
-  const resets = document.querySelectorAll<HTMLElement>('[data-reset]');
+  const resets = document.querySelectorAll<HTMLButtonElement>('[data-reset]');
   const active: Record<string, string | null> = {};
 
   const matches = (card: HTMLElement, key: string, value: string) =>
@@ -111,7 +118,8 @@ const groups = [
     count.textContent = String(shown);
     empty.classList.toggle('hidden', shown > 0);
     const any = Object.values(active).some(Boolean);
-    resets[0]?.classList.toggle('hidden', !any);
+    // Кнопка видна всегда; неактивна, пока ни один фильтр не выбран
+    if (resets[0]) resets[0].disabled = !any;
     for (const b of buttons) b.setAttribute('aria-pressed', String(active[b.dataset.key!] === b.dataset.value));
   };
 
