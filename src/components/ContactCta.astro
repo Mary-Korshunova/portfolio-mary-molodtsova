@@ -1,27 +1,35 @@
 ---
-import CopyEmail from './CopyEmail.astro';
 import { person, telegramUrl, url } from '../data/site';
 ---
 
 <section class="px-5 pb-16 pt-24 md:px-10 md:pb-24 md:pt-40">
   <p class="eyebrow" data-reveal>Давайте работать вместе</p>
-  <h2 class="display mt-6 max-w-[18ch] text-[clamp(2.2rem,5vw,4.5rem)]" data-reveal>
-    Быстрее всего отвечаю в <em>Telegram</em>
-  </h2>
+  <!-- Крупная почта: по клику копируется, при наведении подчёркивается, курсор — круг «копировать» -->
+  <button
+    type="button"
+    class="display group mt-6 block max-w-full break-words text-left text-[clamp(1.75rem,6.4vw,6.5rem)]"
+    data-copy={person.email}
+    data-cursor="copy"
+    data-reveal
+    aria-label={`Скопировать почту ${person.email}`}
+  >
+    <span
+      class="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_0.04em] bg-left-bottom bg-no-repeat pb-[0.06em] transition-[background-size] duration-700 ease-out-soft group-hover:bg-[length:100%_0.04em]"
+    >
+      {person.email}
+    </span>
+  </button>
   <div class="mt-10 flex flex-wrap gap-3" data-reveal>
     <a
       href={telegramUrl}
       target="_blank"
       rel="noopener"
-      class="rounded-full bg-fg px-7 py-4 font-medium text-bg transition-transform duration-300 hover:scale-[1.04]"
+      class="rounded-full bg-fg px-6 py-3.5 text-sm font-medium text-bg transition-transform duration-300 hover:scale-[1.04]"
     >
-      Написать в Telegram
+      Telegram @{person.telegram}
     </a>
-    <a href={url('/resume')} class="rounded-full border border-fg/30 px-7 py-4 transition-colors hover:border-fg">
-      Смотреть резюме
+    <a href={url('/resume')} class="rounded-full border border-fg/30 px-6 py-3.5 text-sm transition-colors hover:border-fg">
+      Резюме
     </a>
   </div>
-  <p class="mt-8 text-sm text-muted" data-reveal>
-    или на почту <CopyEmail class="ml-1" />
-  </p>
 </section>

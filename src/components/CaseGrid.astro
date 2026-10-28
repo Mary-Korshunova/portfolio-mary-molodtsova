@@ -4,15 +4,25 @@ import CaseCard from './CaseCard.astro';
 
 interface Props {
   items: CollectionEntry<'cases'>[];
+  /** true — две колонки в шахматном порядке (главная); false — ровная плитка (/work). */
+  stagger?: boolean;
 }
-const { items } = Astro.props;
+const { items, stagger = false } = Astro.props;
 ---
 
-<!-- Две колонки в шахматном порядке: каждая вторая карточка опущена на --stagger. -->
-<div
-  class="grid gap-y-16 md:grid-cols-2 md:gap-x-8 md:gap-y-[clamp(6rem,14vw,16rem)] md:pb-[var(--stagger)]"
-  style="--stagger: clamp(8rem, 16vw, 15rem)"
-  data-grid
->
-  {items.map((item, i) => <CaseCard item={item} even={i % 2 === 1} />)}
-</div>
+{
+  stagger ? (
+    <div
+      class="grid gap-y-16 md:grid-cols-2 md:gap-x-8 md:gap-y-[clamp(6rem,14vw,16rem)] md:pb-[var(--stagger)]"
+      style="--stagger: clamp(8rem, 16vw, 15rem)"
+      data-grid
+      data-stagger
+    >
+      {items.map((item, i) => <CaseCard item={item} even={i % 2 === 1} />)}
+    </div>
+  ) : (
+    <div class="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3" data-grid>
+      {items.map((item) => <CaseCard item={item} ratio="4 / 5" />)}
+    </div>
+  )
+}

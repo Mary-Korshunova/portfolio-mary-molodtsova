@@ -1,63 +1,151 @@
 ---
-// Свой курсор: кольцо с инверсией, плавно догоняет мышь.
-// Над элементами с data-cursor="view" превращается в большой круг со стрелкой.
-// Только для мыши (pointer: fine); на тач-устройствах не показывается.
+// Свой курсор (только для мыши):
+// - кольцо с инверсией стоит точно под мышью, без задержки;
+// - вне превью за ним тянется светящаяся комета (canvas, аддитивное свечение);
+// - над [data-cursor="view"] кольцо становится белым кругом со стрелкой, над [data-cursor="copy"] — с иконкой копирования.
 ---
 
+<canvas class="pointer-events-none fixed inset-0 z-[9998] hidden h-full w-full [.has-cursor_&]:block" aria-hidden="true" data-comet></canvas>
+
 <div
-  class="pointer-events-none fixed left-0 top-0 z-[9999] hidden mix-blend-difference [.has-cursor_&]:block"
+  class="pointer-events-none fixed left-0 top-0 z-[9999] hidden mix-blend-difference will-change-transform [.has-cursor_&]:block"
   aria-hidden="true"
   data-cursor-el
 >
   <div
-    class="flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[1.5px] border-white bg-white/0 opacity-0 transition-[width,height,background-color,opacity,scale] duration-300 ease-out-soft [.is-active_&]:opacity-100 [.is-link_&]:scale-150 [.is-view_&]:size-24 [.is-view_&]:bg-white [.is-down_&]:scale-90"
+    class="relative flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[1.5px] border-white bg-white/0 opacity-0 transition-[width,height,background-color,opacity,scale] duration-300 ease-out-soft [.is-active_&]:opacity-100 [.is-big_&]:size-24 [.is-big_&]:bg-white [.is-down_&]:scale-90 [.is-link_&]:scale-125"
   >
     <svg
       viewBox="0 0 24 24"
-      class="size-1/2 scale-50 fill-none stroke-black opacity-0 transition-[opacity,scale] duration-300 [.is-view_&]:scale-100 [.is-view_&]:opacity-100"
-      stroke-width="1.5"
+      class="absolute size-12 scale-50 fill-none stroke-black opacity-0 transition-[opacity,scale] duration-300 [.is-view_&]:scale-100 [.is-view_&]:opacity-100"
+      stroke-width="1.2"
       stroke-linecap="round"
       stroke-linejoin="round"
     >
       <path d="M7 17L17 7M17 7H8M17 7V16"></path>
+    </svg>
+    <svg
+      viewBox="0 0 24 24"
+      class="absolute size-9 scale-50 fill-none stroke-black opacity-0 transition-[opacity,scale] duration-300 [.is-copy_&]:scale-100 [.is-copy_&]:opacity-100"
+      stroke-width="1.3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+      <path d="M5 15V6a2 2 0 0 1 2-2h8"></path>
     </svg>
   </div>
 </div>
 
 <script>
   const el = document.querySelector<HTMLElement>('[data-cursor-el]')!;
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-comet]')!;
   const fine = window.matchMedia('(pointer: fine)').matches;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (fine) {
     document.documentElement.classList.add('has-cursor');
-    let x = -100;
-    let y = -100;
-    let cx = -100;
-    let cy = -100;
+    const ctx = canvas.getContext('2d')!;
+    const TRAIL_MS = 260; // длина хвоста по времени
+    const trail: { x: number; y: number; t: number }[] = [];
+    let x = -200;
+    let y = -200;
+    let visible = false;
+    let cometAlpha = 0; // плавно гаснет над превью и при уходе мыши
+    let big = false;
+    let dpr = 1;
+
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(innerWidth * dpr);
+      canvas.height = Math.round(innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    addEventListener('resize', resize);
 
     const update = (target: Element | null) => {
-      const view = !!target?.closest('[data-cursor="view"]');
-      el.classList.toggle('is-view', view);
-      el.classList.toggle('is-link', !view && !!target?.closest('a, button, [data-copy]'));
+      const mode = target?.closest<HTMLElement>('[data-cursor]')?.dataset.cursor;
+      big = mode === 'view' || mode === 'copy';
+      el.classList.toggle('is-big', big);
+      el.classList.toggle('is-view', mode === 'view');
+      el.classList.toggle('is-copy', mode === 'copy');
+      el.classList.toggle('is-link', !big && !!target?.closest('a, button, [data-copy]'));
     };
-    window.addEventListener('pointermove', (e) => {
+
+    const place = () => {
+      el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    };
+
+    addEventListener('pointermove', (e) => {
+      // Позиция обновляется сразу на событии — курсор не отстаёт от мыши
+      const events = e.getCoalescedEvents?.() ?? [e];
+      for (const ev of events.length ? events : [e]) trail.push({ x: ev.clientX, y: ev.clientY, t: performance.now() });
       x = e.clientX;
       y = e.clientY;
+      place();
+      visible = true;
       el.classList.add('is-active');
       update(e.target as Element);
     });
-    // При прокрутке под неподвижной мышью оказывается другой элемент
-    window.addEventListener('scroll', () => update(document.elementFromPoint(x, y)), { passive: true });
-    document.addEventListener('pointerleave', () => el.classList.remove('is-active'));
-    window.addEventListener('pointerdown', () => el.classList.add('is-down'));
-    window.addEventListener('pointerup', () => el.classList.remove('is-down'));
+    document.addEventListener('pointerleave', () => {
+      visible = false;
+      el.classList.remove('is-active');
+    });
+    addEventListener('pointerdown', () => el.classList.add('is-down'));
+    addEventListener('pointerup', () => el.classList.remove('is-down'));
+    addEventListener('scroll', () => update(document.elementFromPoint(x, y)), { passive: true });
 
-    const tick = () => {
-      cx += (x - cx) * 0.2;
-      cy += (y - cy) * 0.2;
-      el.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-      requestAnimationFrame(tick);
+    const glow = (cx: number, cy: number, r: number, a: number) => {
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      g.addColorStop(0, `rgba(235, 252, 255, ${0.95 * a})`);
+      g.addColorStop(0.18, `rgba(140, 225, 255, ${0.75 * a})`);
+      g.addColorStop(0.45, `rgba(70, 170, 255, ${0.22 * a})`);
+      g.addColorStop(1, 'rgba(40, 120, 255, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
     };
-    requestAnimationFrame(tick);
+
+    const frame = (now: number) => {
+      // Размер окна или масштаб могли поменяться без события resize
+      const wantDpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (canvas.width !== Math.round(innerWidth * wantDpr) || canvas.height !== Math.round(innerHeight * wantDpr)) resize();
+      while (trail.length && now - trail[0].t > TRAIL_MS) trail.shift();
+      const target = visible && !big && !reduced ? 1 : 0;
+      cometAlpha += (target - cometAlpha) * 0.2;
+
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      if (cometAlpha > 0.01) {
+        ctx.globalCompositeOperation = 'lighter';
+        const pts = [...trail, { x, y, t: now }];
+        const n = pts.length;
+        // Хвост: от старых точек к голове толщина и яркость растут
+        ctx.lineCap = 'round';
+        for (let i = 1; i < n; i++) {
+          const age = (now - pts[i].t) / TRAIL_MS;
+          const k = Math.max(0, 1 - age);
+          if (k <= 0) continue;
+          const a = k * k * 0.6 * cometAlpha;
+          ctx.strokeStyle = `rgba(120, 215, 255, ${a})`;
+          ctx.shadowColor = `rgba(60, 170, 255, ${a})`;
+          ctx.shadowBlur = 30 * k;
+          ctx.lineWidth = 2 + 26 * Math.pow(k, 1.6);
+          ctx.beginPath();
+          ctx.moveTo(pts[i - 1].x, pts[i - 1].y);
+          ctx.lineTo(pts[i].x, pts[i].y);
+          ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
+        // Голова кометы — яркое ядро и мягкий ореол, ровно под курсором
+        const speed = n > 2 ? Math.hypot(x - pts[0].x, y - pts[0].y) : 0;
+        glow(x, y, 58 + Math.min(speed, 260) * 0.08, cometAlpha);
+        glow(x, y, 170, 0.38 * cometAlpha);
+        ctx.globalCompositeOperation = 'source-over';
+      }
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
   }
 </script>
