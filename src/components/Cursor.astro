@@ -1,0 +1,63 @@
+---
+// Свой курсор: кольцо с инверсией, плавно догоняет мышь.
+// Над элементами с data-cursor="view" превращается в большой круг со стрелкой.
+// Только для мыши (pointer: fine); на тач-устройствах не показывается.
+---
+
+<div
+  class="pointer-events-none fixed left-0 top-0 z-[9999] hidden mix-blend-difference [.has-cursor_&]:block"
+  aria-hidden="true"
+  data-cursor-el
+>
+  <div
+    class="flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[1.5px] border-white bg-white/0 opacity-0 transition-[width,height,background-color,opacity,scale] duration-300 ease-out-soft [.is-active_&]:opacity-100 [.is-link_&]:scale-150 [.is-view_&]:size-24 [.is-view_&]:bg-white [.is-down_&]:scale-90"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      class="size-1/2 scale-50 fill-none stroke-black opacity-0 transition-[opacity,scale] duration-300 [.is-view_&]:scale-100 [.is-view_&]:opacity-100"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M7 17L17 7M17 7H8M17 7V16"></path>
+    </svg>
+  </div>
+</div>
+
+<script>
+  const el = document.querySelector<HTMLElement>('[data-cursor-el]')!;
+  const fine = window.matchMedia('(pointer: fine)').matches;
+
+  if (fine) {
+    document.documentElement.classList.add('has-cursor');
+    let x = -100;
+    let y = -100;
+    let cx = -100;
+    let cy = -100;
+
+    const update = (target: Element | null) => {
+      const view = !!target?.closest('[data-cursor="view"]');
+      el.classList.toggle('is-view', view);
+      el.classList.toggle('is-link', !view && !!target?.closest('a, button, [data-copy]'));
+    };
+    window.addEventListener('pointermove', (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      el.classList.add('is-active');
+      update(e.target as Element);
+    });
+    // При прокрутке под неподвижной мышью оказывается другой элемент
+    window.addEventListener('scroll', () => update(document.elementFromPoint(x, y)), { passive: true });
+    document.addEventListener('pointerleave', () => el.classList.remove('is-active'));
+    window.addEventListener('pointerdown', () => el.classList.add('is-down'));
+    window.addEventListener('pointerup', () => el.classList.remove('is-down'));
+
+    const tick = () => {
+      cx += (x - cx) * 0.2;
+      cy += (y - cy) * 0.2;
+      el.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+</script>

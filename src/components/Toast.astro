@@ -1,0 +1,47 @@
+---
+// Копирование по клику на элементы с data-copy="текст" + тост «Скопировано» внизу экрана.
+---
+
+<div
+  class="pointer-events-none fixed inset-x-0 bottom-6 z-[9500] flex justify-center px-4"
+  role="status"
+  aria-live="polite"
+>
+  <p
+    class="translate-y-4 rounded-full bg-fg px-5 py-3 text-sm font-medium text-bg opacity-0 shadow-lg transition-[opacity,translate] duration-300 ease-out-soft [&.is-shown]:translate-y-0 [&.is-shown]:opacity-100"
+    data-toast
+  >
+  </p>
+</div>
+
+<script>
+  const toast = document.querySelector<HTMLElement>('[data-toast]')!;
+  let timer: number | undefined;
+
+  const show = (text: string) => {
+    toast.textContent = text;
+    toast.classList.add('is-shown');
+    clearTimeout(timer);
+    timer = window.setTimeout(() => toast.classList.remove('is-shown'), 2000);
+  };
+
+  const copy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const ta = Object.assign(document.createElement('textarea'), { value: text });
+      document.body.append(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+  };
+
+  document.addEventListener('click', async (e) => {
+    const target = (e.target as Element).closest<HTMLElement>('[data-copy]');
+    if (!target) return;
+    e.preventDefault();
+    await copy(target.dataset.copy!);
+    show('Скопировано');
+  });
+</script>

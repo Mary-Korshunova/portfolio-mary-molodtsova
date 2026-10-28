@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import CaseCard from '../../components/CaseCard.astro';
+import CaseGrid from '../../components/CaseGrid.astro';
 import ContactCta from '../../components/ContactCta.astro';
 import { person } from '../../data/site';
 
@@ -53,10 +53,8 @@ const groups = [
     </div>
   </section>
 
-  <section class="px-5 pb-10 pt-12 md:px-10">
-    <div class="grid gap-x-8 gap-y-16 md:grid-cols-2" data-grid>
-      {cases.map((item, i) => <CaseCard item={item} delay={(i % 2) * 120} />)}
-    </div>
+  <section class="px-5 pb-10 pt-12 md:px-10 md:pt-20">
+    <CaseGrid items={cases} />
     <div class="hidden py-20 text-center" data-empty>
       <p class="text-lg">Таких кейсов пока нет.</p>
       <button type="button" class="mt-4 rounded-full border border-line px-6 py-3 text-sm hover:border-fg/40" data-reset>
@@ -106,6 +104,8 @@ const groups = [
       card.hidden = !ok;
       if (ok) {
         card.classList.add('is-in');
+        // Шахматный порядок считаем заново среди видимых карточек
+        card.classList.toggle('is-even', shown % 2 === 1);
         shown++;
       }
     }

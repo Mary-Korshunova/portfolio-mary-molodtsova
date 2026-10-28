@@ -1,0 +1,22 @@
+---
+import { person } from '../data/site';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<button
+  type="button"
+  class:list={['group inline-flex items-center gap-2 text-left transition-colors hover:text-fg', className]}
+  data-copy={person.email}
+  title="Скопировать почту"
+>
+  <span class="link-line">{person.email}</span>
+  <svg viewBox="0 0 24 24" class="size-4 shrink-0 fill-none stroke-current opacity-60 group-hover:opacity-100" stroke-width="1.5" aria-hidden="true">
+    <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+    <path d="M5 15V6a2 2 0 0 1 2-2h8"></path>
+  </svg>
+  <span class="sr-only">— скопировать</span>
+</button>

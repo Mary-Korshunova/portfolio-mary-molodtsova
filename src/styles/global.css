@@ -49,7 +49,21 @@
 }
 .display em {
   font-style: italic;
-  color: var(--color-accent);
+  background: linear-gradient(90deg, #ebe1b0 -80%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 0.035em;
+  text-underline-offset: 0.16em;
+  padding-right: 0.08em;
+}
+
+/* Свой курсор вместо системного (включается скриптом только для мыши) */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
 }
 
 .eyebrow {

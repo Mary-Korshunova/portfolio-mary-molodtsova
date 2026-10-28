@@ -1,0 +1,68 @@
+---
+// Фон из мерцающих точек, медленно дрейфующих; при скролле слои смещаются с разной скоростью.
+---
+
+<canvas class="pointer-events-none fixed inset-0 z-0 h-full w-full" aria-hidden="true" data-starfield></canvas>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-starfield]')!;
+  const ctx = canvas.getContext('2d')!;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  type Star = { x: number; y: number; r: number; depth: number; phase: number; speed: number; drift: number };
+  let stars: Star[] = [];
+  let w = 0;
+  let h = 0;
+  let dpr = 1;
+
+  const resize = () => {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const count = Math.round((w * h) / 7000);
+    stars = Array.from({ length: count }, () => {
+      const depth = Math.random();
+      return {
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: 0.4 + depth * 1.1,
+        depth,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.4 + Math.random() * 1.2,
+        drift: (Math.random() - 0.5) * 0.06,
+      };
+    });
+  };
+
+  const draw = (t: number) => {
+    ctx.clearRect(0, 0, w, h);
+    const scroll = window.scrollY;
+    for (const s of stars) {
+      const tw = reduced ? 0.7 : 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * 0.001 * s.speed + s.phase));
+      const y = (((s.y - scroll * (0.05 + s.depth * 0.25) - t * 0.004 * s.depth) % h) + h) % h;
+      const x = (((s.x + t * s.drift * 0.05) % w) + w) % w;
+      ctx.globalAlpha = tw * (0.25 + s.depth * 0.55);
+      ctx.beginPath();
+      ctx.arc(x, y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = '#e8e6ff';
+      ctx.fill();
+    }
+  };
+
+  const loop = (t: number) => {
+    draw(t);
+    if (!reduced) requestAnimationFrame(loop);
+  };
+
+  resize();
+  window.addEventListener('resize', resize);
+  if (reduced) {
+    draw(0);
+    window.addEventListener('scroll', () => draw(0), { passive: true });
+  } else {
+    requestAnimationFrame(loop);
+  }
+</script>

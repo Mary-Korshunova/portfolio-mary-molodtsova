@@ -7,6 +7,8 @@ export default defineConfig({
   site: 'https://mary-korshunova.github.io',
   base: '/portfolio-mary-molodtsova',
   trailingSlash: 'ignore',
+  // Панель разработчика Astro внизу экрана в режиме npm run dev — не нужна.
+  devToolbar: { enabled: false },
   vite: {
     plugins: [tailwindcss()],
   },

@@ -1,4 +1,5 @@
 ---
+import CopyEmail from './CopyEmail.astro';
 import { nav, person, telegramUrl, url } from '../data/site';
 
 const current = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
@@ -11,7 +12,10 @@ const isActive = (href: string) => current === href || current.startsWith(href +
   >
   </div>
   <div class="flex items-center justify-between gap-6">
-    <a href={url('/')} class="text-[15px] font-medium tracking-tight">{person.name}</a>
+    <div class="flex items-baseline gap-8 whitespace-nowrap text-[15px]">
+      <a href={url('/')} class="font-medium tracking-tight">{person.name}</a>
+      <span class="hidden text-muted lg:inline">{person.role}</span>
+    </div>
 
     <nav class="hidden items-center gap-8 text-sm md:flex" aria-label="Основная навигация">
       {
@@ -63,7 +67,7 @@ const isActive = (href: string) => current === href || current.startsWith(href +
       <a href={telegramUrl} target="_blank" rel="noopener" class="rounded-full bg-fg px-6 py-4 text-center font-medium text-bg">
         Написать в Telegram
       </a>
-      <a href={`mailto:${person.email}`} class="text-center text-muted">{person.email}</a>
+      <CopyEmail class="justify-center self-center text-muted" />
     </div>
   </div>
 </header>
