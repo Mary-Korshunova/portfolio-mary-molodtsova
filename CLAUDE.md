@@ -53,7 +53,17 @@
 - Контакты, факты и навигация: `src/data/site.ts`. Внутренние ссылки — только через `url()` (сайт в подпапке).
 - Заглушки картинок: компонент `Placeholder` или `<figure class="ph">` в markdown, подпись = что должно быть.
 - Dev: `npm run dev` → http://localhost:4321/portfolio-mary-molodtsova/ · сборка: `npm run build`.
-- Деплой: push в `main` → GitHub Actions (`.github/workflows/deploy.yml`) → GitHub Pages.
+- Деплой: GitHub Actions (`.github/workflows/deploy.yml`) → GitHub Pages, **только ручной запуск**.
+
+## Публикация — только с разрешения Мэри
+
+Сайт не готов, и пока его не должен видеть никто, кроме Мэри.
+- Не включать GitHub Pages, не запускать workflow Deploy, не добавлять в него триггер `push`.
+- Не пушить в репозиторий, пока он **публичный**. Пушить можно только в приватный
+  (проверка: `gh repo view --json visibility` → `PRIVATE`).
+- Не размещать сайт ни на каких других хостингах и превью-сервисах.
+- Смотреть сайт — только локально: `npm run dev`.
+- Публикация — отдельное явное разрешение Мэри в чате, каждый раз.
 
 ## NDA
 
