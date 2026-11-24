@@ -38,7 +38,7 @@ const backHref = from === '/' ? url('/') : url('/work');
     </header>
     <div class="prose-case mx-auto max-w-[44rem] px-5 py-16 md:py-24" data-case-content>
       <Content />
-      {d.coverImage && (
+      {d.coverImage && prototypes.length === 0 && (
         <figure>
           <img src={url(d.coverImage)} alt={d.cover} loading="lazy" class="block h-auto w-full rounded-[4px]" />
         </figure>
@@ -52,9 +52,9 @@ const backHref = from === '/' ? url('/') : url('/work');
     <img alt="" class="max-h-[calc(100dvh-7rem)] max-w-full rounded-[4px] object-contain" />
   </dialog>
   {prototypes.length > 0 && (
-    <aside class="mx-auto grid max-w-[64rem] grid-cols-[1fr_2fr] items-start gap-3 px-5 pb-16 md:gap-6 md:pb-24" aria-label="Прототипы Катюши">
+    <aside class="mx-auto grid max-w-[64rem] grid-cols-[minmax(0,495fr)_minmax(0,1420fr)] items-start px-5 pb-16 md:pb-24" aria-label="Прототипы Катюши">
       {prototypes.map(({ image, href, label }) => (
-        <a href={href} target="_blank" rel="noopener noreferrer" data-cursor="view">
+        <a href={href} target="_blank" rel="noopener noreferrer" data-cursor="view" data-cursor-label="Перейти в прототип">
           <img src={url(image)} alt={label} loading="lazy" class="block h-auto w-full rounded-[4px]" />
         </a>
       ))}

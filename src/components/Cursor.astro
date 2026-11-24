@@ -36,9 +36,11 @@
     </svg>
   </div>
 </div>
+<span data-cursor-tooltip hidden aria-hidden="true" class="pointer-events-none fixed top-0 left-0 z-[10000] whitespace-nowrap rounded-full border border-line bg-surface px-3 py-1.5 text-sm text-fg"></span>
 
 <script>
   const el = document.querySelector<HTMLElement>('[data-cursor-el]')!;
+  const tooltip = document.querySelector<HTMLElement>('[data-cursor-tooltip]')!;
   const canvas = document.querySelector<HTMLCanvasElement>('[data-comet]')!;
   const fine = window.matchMedia('(pointer: fine)').matches;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -103,12 +105,25 @@
     ]);
 
     const update = (target: Element | null) => {
-      const mode = target?.closest<HTMLElement>('[data-cursor]')?.dataset.cursor;
+      const cursorTarget = target?.closest<HTMLElement>('[data-cursor]');
+      const mode = cursorTarget?.dataset.cursor;
       big = mode === 'view' || mode === 'copy';
       el.classList.toggle('is-big', big);
       el.classList.toggle('is-view', mode === 'view');
       el.classList.toggle('is-copy', mode === 'copy');
       el.classList.toggle('is-link', !big && !!target?.closest('a, button, [data-copy]'));
+
+      const label = cursorTarget?.dataset.cursorLabel;
+      tooltip.hidden = !visible || !label;
+      if (visible && label) {
+        if (tooltip.textContent !== label) tooltip.textContent = label;
+        const width = tooltip.offsetWidth;
+        const height = tooltip.offsetHeight;
+        const gap = 56;
+        const left = x + gap + width + 8 <= vw() ? x + gap : Math.max(8, x - gap - width);
+        const top = Math.max(8, Math.min(y - height / 2, vh() - height - 8));
+        tooltip.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+      }
     };
 
     addEventListener('pointermove', (e) => {
@@ -127,6 +142,7 @@
     });
     document.addEventListener('pointerleave', () => {
       visible = false;
+      tooltip.hidden = true;
       el.classList.remove('is-active');
     });
     addEventListener('pointerdown', () => el.classList.add('is-down'));
