@@ -17,6 +17,41 @@ const { items, featured = false, fromPath = '/work' } = Astro.props;
       : 'grid items-start gap-x-6 gap-y-14 sm:grid-cols-2',
   ]}
   data-grid
+  data-masonry={!featured || undefined}
 >
   {items.map((item) => <CaseCard item={item} ratio={featured ? '8 / 11' : '4 / 5'} fromPath={fromPath} />)}
 </div>
+
+<style>
+  @media (min-width: 40rem) {
+    [data-masonry-ready] {
+      grid-auto-flow: row dense;
+      grid-auto-rows: 1px;
+      row-gap: 0;
+      margin-bottom: -56px;
+    }
+
+    [data-masonry-ready] > :global([data-case]) {
+      grid-row-end: span var(--card-span, 1);
+    }
+  }
+</style>
+
+<script>
+  const grid = document.querySelector<HTMLElement>('[data-masonry]');
+  if (grid) {
+    const cards = grid.querySelectorAll<HTMLElement>('[data-case]');
+    const setSpan = (card: HTMLElement) => {
+      if (!card.hidden) card.style.setProperty('--card-span', String(card.offsetHeight + 56));
+    };
+
+    const observer = new ResizeObserver((entries) => {
+      for (const { target } of entries) setSpan(target as HTMLElement);
+    });
+    for (const card of cards) {
+      setSpan(card);
+      observer.observe(card);
+    }
+    grid.setAttribute('data-masonry-ready', '');
+  }
+</script>
