@@ -5,20 +5,17 @@ import { url } from '../data/site';
 
 interface Props {
   item: CollectionEntry<'cases'>;
-  /** Карточка во второй колонке — сдвигается вниз (шахматный порядок). */
-  even?: boolean;
   ratio?: string;
   fromPath?: string;
 }
-const { item, even = false, ratio = '8 / 11', fromPath = '/work' } = Astro.props;
+const { item, ratio = '8 / 11', fromPath = '/work' } = Astro.props;
 const { title, year, excerpt, org, cover, coverImage } = item.data;
 ---
 
 <a
   href={`${url(`/work/${item.id}`)}?from=${encodeURIComponent(fromPath)}`}
-  class:list={['group block md:transition-[translate] md:duration-700 md:ease-out-soft md:[[data-stagger]_&.is-even]:translate-y-[var(--stagger)]', even && 'is-even']}
+  class="block"
   data-reveal
-  style={even ? '--reveal-delay: 120ms' : undefined}
   data-case
   data-year={item.data.year}
   data-platform={item.data.platforms.join('|')}

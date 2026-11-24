@@ -38,15 +38,15 @@ const heading = [
     </dl>
   </section>
 
-  <section class="px-5 pb-20 pt-8 md:px-10 md:pb-32 md:pt-12" aria-label="Кейсы">
+  <section class="px-5 pb-10 pt-8 md:px-10 md:pb-16 md:pt-12" aria-label="Кейсы">
     <div class="border-t border-line pb-8 md:pb-12"></div>
-    <CaseGrid items={latest} stagger fromPath="/" />
-    <div class="mt-16 flex justify-center" data-reveal>
+    <CaseGrid items={latest} featured fromPath="/" />
+    <div class="mt-8 flex justify-center md:mt-20" data-reveal>
       <a href={url('/work')} class="rounded-full border border-fg/30 px-7 py-3.5 text-sm transition-colors hover:border-fg">
         Все работы
       </a>
     </div>
   </section>
 
-  <ContactCta />
+  <ContactCta compact />
 </Base>
