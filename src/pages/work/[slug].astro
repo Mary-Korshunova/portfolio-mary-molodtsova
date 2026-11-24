@@ -50,8 +50,8 @@ const backHref = from === '/' ? url('/') : url('/work');
     </div>
   </article>
   <dialog data-image-viewer data-lenis-prevent aria-label="Просмотр изображения" class="fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none place-items-center bg-transparent p-4 text-fg backdrop:bg-black/90 open:grid md:p-12">
-    <button type="button" data-image-close autofocus aria-label="Закрыть изображение" class="absolute top-4 right-4 grid size-11 place-items-center rounded-full border border-line bg-surface text-2xl">
-      <span aria-hidden="true">×</span>
+    <button type="button" data-image-close autofocus aria-label="Закрыть изображение" class="absolute top-4 right-4 grid size-11 cursor-pointer place-items-center rounded-full border border-line bg-surface text-2xl select-none">
+      <span aria-hidden="true" class="pointer-events-none">×</span>
     </button>
     <img alt="" class="max-h-[calc(100dvh-7rem)] max-w-full rounded-[4px] bg-white object-contain" />
   </dialog>
