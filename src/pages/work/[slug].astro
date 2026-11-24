@@ -120,6 +120,10 @@ const backHref = from === '/' ? url('/') : url('/work');
 </script>
 
 <style>
+  [data-image-viewer] img:is([src*="/flow."], [src*="%2Fflow."]) {
+    background-color: black;
+  }
+
   :global(html:has(dialog[data-image-viewer][open])) {
     overflow: hidden;
   }
