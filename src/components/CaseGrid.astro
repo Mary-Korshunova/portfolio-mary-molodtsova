@@ -12,10 +12,9 @@ const { items, featured = false, fromPath = '/work' } = Astro.props;
 
 <div
   class:list={[
-    'grid',
     featured
-      ? 'items-start gap-8 md:grid-cols-2'
-      : 'gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3',
+      ? 'grid items-start gap-8 md:grid-cols-2'
+      : 'columns-1 gap-6 sm:columns-2 [&>[data-case]]:mb-14 [&>[data-case]]:break-inside-avoid',
   ]}
   data-grid
 >

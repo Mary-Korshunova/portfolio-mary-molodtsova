@@ -27,15 +27,14 @@ const { title, year, excerpt, org, cover, coverImage } = item.data;
       coverImage ? (
         <img src={url(coverImage)} alt={cover} loading="lazy" class="block h-auto w-full rounded-[4px]" />
       ) : item.id === 'business-account-in-progress' ? (
-        <div class="grid place-items-center rounded-[4px] bg-[#201e24] text-lg" style={{ aspectRatio: ratio }}>Скоро</div>
+        <div class="grid h-[400px] place-items-center rounded-[4px] bg-[#201e24] text-lg">Скоро</div>
       ) : (
         <Placeholder caption={cover} ratio={ratio} />
       )
     }
   </div>
-  <div class="mt-6 flex items-baseline justify-between gap-4">
-    <h3 class="text-xl font-normal tracking-tight md:text-[1.375rem]">{title}</h3>
-    <span class="shrink-0 text-sm tabular-nums text-fg/80">{year}</span>
-  </div>
+  <h3 class="mt-6 text-xl font-normal tracking-tight md:text-[1.375rem]">
+    {title} <span class="whitespace-nowrap text-muted"><span aria-hidden="true">•</span> {year}</span>
+  </h3>
   <p class="mt-2 max-w-md text-[15px] leading-relaxed text-muted">{excerpt}</p>
 </a>
