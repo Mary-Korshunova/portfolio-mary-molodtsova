@@ -42,7 +42,7 @@ const backHref = from === '/' ? url('/') : url('/work');
     </header>
     <div class="prose-case mx-auto max-w-[44rem] px-5 py-16 md:py-24" data-case-content>
       <Content />
-      {d.coverImage && prototypes.length === 0 && (
+      {d.coverImage && d.showCoverInCase && prototypes.length === 0 && (
         <figure>
           <img src={url(d.coverImage)} alt={d.cover} loading="lazy" class="block h-auto w-full rounded-[4px]" />
         </figure>
@@ -122,5 +122,12 @@ const backHref = from === '/' ? url('/') : url('/work');
 <style>
   :global(html:has(dialog[data-image-viewer][open])) {
     overflow: hidden;
+  }
+
+  .prose-case :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
   }
 </style>

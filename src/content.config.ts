@@ -20,6 +20,7 @@ const cases = defineCollection({
     cover: z.string(),
     // Путь к реальной обложке в public/covers/, когда она появится.
     coverImage: z.string().optional(),
+    showCoverInCase: z.boolean().default(true),
   }),
 });
 
