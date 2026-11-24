@@ -3,15 +3,14 @@ export const person = {
   role: 'Продуктовый дизайнер',
   email: 'marykors.designer@gmail.com',
   telegram: 'marykorshun',
-  behance: 'https://www.behance.net/marykorshunova',
 };
 
 export const telegramUrl = `https://t.me/${person.telegram}`;
 
 export const facts = [
   { label: 'Город', value: 'Москва' },
-  { label: 'Ищу', value: 'Команду, которая любит свой продукт' },
-  { label: 'Языки', value: 'Русский, английский для путешествий' },
+  { label: 'Опыт', value: 'От 3 лет' },
+  { label: 'Ключевые навыки', value: 'UX/UI-дизайн, продуктовый дизайн' },
   { label: 'Формат', value: 'Удалённо или гибрид' },
 ];
 

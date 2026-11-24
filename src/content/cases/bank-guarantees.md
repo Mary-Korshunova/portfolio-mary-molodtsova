@@ -6,7 +6,7 @@ org: "Банк"
 year: 2025
 platforms: ["Веб"]
 format: "Сервис"
-home: true
+home: false
 order: 4
 cover: "Обложка: форма заявки на гарантию и список гарантий в интернет-банке"
 ---

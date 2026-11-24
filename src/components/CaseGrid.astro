@@ -6,8 +6,9 @@ interface Props {
   items: CollectionEntry<'cases'>[];
   /** true — две колонки в шахматном порядке (главная); false — ровная плитка (/work). */
   stagger?: boolean;
+  fromPath?: string;
 }
-const { items, stagger = false } = Astro.props;
+const { items, stagger = false, fromPath = '/work' } = Astro.props;
 ---
 
 {
@@ -18,11 +19,11 @@ const { items, stagger = false } = Astro.props;
       data-grid
       data-stagger
     >
-      {items.map((item, i) => <CaseCard item={item} even={i % 2 === 1} />)}
+      {items.map((item, i) => <CaseCard item={item} even={i % 2 === 1} fromPath={fromPath} />)}
     </div>
   ) : (
     <div class="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3" data-grid>
-      {items.map((item) => <CaseCard item={item} ratio="4 / 5" />)}
+      {items.map((item) => <CaseCard item={item} ratio={item.data.cardRatio ?? '4 / 5'} fromPath={fromPath} />)}
     </div>
   )
 }

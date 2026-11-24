@@ -164,6 +164,18 @@ html.has-cursor * {
   background-size: 100% 1px;
 }
 
+.accent-underline {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.12em;
+}
+
+img {
+  border-radius: 4px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal] {
     opacity: 1;

@@ -11,13 +11,14 @@ const cases = defineCollection({
     org: z.string(),
     year: z.number(),
     platforms: z.array(z.string()),
-    format: z.enum(['Сервис', 'Фича', 'Лендинг', 'Паттерн', 'Редполитика', 'ИИ-прототип']),
+    format: z.enum(['Сервис', 'Фича', 'Лендинг', 'Мессенджер', 'Паттерн', 'Редполитика', 'ИИ-прототип']),
     home: z.boolean().default(false),
     order: z.number(),
     // Подпись к заглушке обложки — что должно быть на картинке.
     cover: z.string(),
     // Путь к реальной обложке в public/covers/, когда она появится.
     coverImage: z.string().optional(),
+    cardRatio: z.string().optional(),
   }),
 });
 

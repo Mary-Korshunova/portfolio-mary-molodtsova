@@ -14,7 +14,7 @@ const isActive = (href: string) => current === href || current.startsWith(href +
   <div class="flex items-center justify-between gap-6">
     <div class="flex items-baseline gap-8 whitespace-nowrap text-[15px]">
       <a href={url('/')} class="font-medium tracking-tight">{person.name}</a>
-      <span class="hidden text-muted lg:inline">{person.role}</span>
+      <a href={url('/')} class="hidden text-muted transition-colors hover:text-fg lg:inline">{person.role}</a>
     </div>
 
     <nav class="hidden items-center gap-8 text-sm md:flex" aria-label="Основная навигация">

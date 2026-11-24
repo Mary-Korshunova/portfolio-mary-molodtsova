@@ -2,15 +2,11 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ContactCta from '../../components/ContactCta.astro';
-import Placeholder from '../../components/Placeholder.astro';
 import { url } from '../../data/site';
 
 export async function getStaticPaths() {
   const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
-  return cases.map((item, i) => ({
-    params: { slug: item.id },
-    props: { item, next: cases[(i + 1) % cases.length] },
-  }));
+  return cases.map((item, i) => ({ params: { slug: item.id }, props: { item, next: cases[(i + 1) % cases.length] } }));
 }
 
 const { item, next } = Astro.props;
@@ -19,52 +15,39 @@ const d = item.data;
 const meta = [
   { label: 'Организация', value: d.org },
   { label: 'Год', value: String(d.year) },
-  { label: 'Платформа', value: d.platforms.join(', ') },
+  { label: 'Платформа', value: d.platforms.map((p) => p === 'Адаптив' ? 'адаптив' : p).join(', ') },
   { label: 'Формат', value: d.format },
 ];
+const from = Astro.url.searchParams.get('from');
+const backHref = from === '/' ? url('/') : url('/work');
 ---
 
 <Base title={d.title} description={d.excerpt}>
   <article>
     <header class="px-5 pt-32 md:px-10 md:pt-44">
-      <a href={url('/work')} class="link-line text-sm text-muted hover:text-fg" data-reveal>← Все работы</a>
+      <a href={backHref} class="link-line text-sm text-muted hover:text-fg" data-reveal data-back>← Назад</a>
       <h1 class="display mt-8 max-w-[20ch] text-[clamp(2.4rem,6vw,5.5rem)]" data-reveal>{d.title}</h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted md:text-xl" data-reveal>{d.lead}</p>
       <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-line pt-6 md:grid-cols-4" data-reveal>
-        {
-          meta.map((m) => (
-            <div>
-              <dt class="eyebrow">{m.label}</dt>
-              <dd class="mt-2 text-[15px]">{m.value}</dd>
-            </div>
-          ))
-        }
+        {meta.map((m) => <div><dt class="eyebrow">{m.label}</dt><dd class="mt-2 text-[15px]">{m.value}</dd></div>)}
       </dl>
     </header>
-
-    <div class="px-5 pt-12 md:px-10 md:pt-16" data-reveal>
-      {
-        d.coverImage ? (
-          <img src={url(d.coverImage)} alt={d.cover} class="aspect-[16/9] w-full rounded-2xl object-cover" />
-        ) : (
-          <Placeholder caption={d.cover} ratio="16 / 9" />
-        )
-      }
-    </div>
-
-    <div class="prose-case mx-auto max-w-[44rem] px-5 py-16 md:py-24">
-      <Content />
-    </div>
+    <div class="prose-case mx-auto max-w-[44rem] px-5 py-16 md:py-24"><Content /></div>
   </article>
-
   <nav class="px-5 md:px-10" aria-label="Следующий кейс">
     <a href={url(`/work/${next.id}`)} class="group block border-t border-line pt-10" data-reveal>
       <p class="eyebrow">Следующий кейс</p>
-      <p class="display mt-4 text-[clamp(2rem,5vw,4.5rem)] transition-colors group-hover:text-accent">
-        {next.data.title} <span aria-hidden="true">→</span>
-      </p>
+      <p class="display mt-4 text-[clamp(2rem,5vw,4.5rem)] transition-colors group-hover:text-accent">{next.data.title} <span aria-hidden="true">→</span></p>
     </a>
   </nav>
-
   <ContactCta />
 </Base>
+
+<script>
+  document.querySelector<HTMLAnchorElement>('[data-back]')?.addEventListener('click', (event) => {
+    if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) {
+      event.preventDefault();
+      history.back();
+    }
+  });
+</script>

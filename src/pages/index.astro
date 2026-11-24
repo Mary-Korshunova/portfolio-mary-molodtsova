@@ -10,8 +10,8 @@ const latest = (await getCollection('cases', (c) => c.data.home)).sort((a, b) =>
 
 // Строки заголовка появляются по очереди.
 const heading = [
-  'Продуктовый дизайнер из <em>Москвы</em>.',
-  'Проектирую B2B-сервисы',
+  'Проектирую удобные',
+  '<em class="accent-underline">B2B-сервисы</em>',
   'для банков и CRM, в которых',
   'сложное становится понятным.',
 ];
@@ -47,17 +47,17 @@ const heading = [
       </dl>
 
       <div data-reveal style="--reveal-delay: 300ms">
-        <Placeholder caption="Портретное фото Марии на насыщенном фоне, вертикальное" ratio="583 / 640" />
+        <img src={url('/assets/portrait-mary.webp')} alt="Мария Молодцова" class="w-full rounded object-cover" loading="eager" />
       </div>
     </div>
   </section>
 
   <section class="px-5 py-20 md:px-10 md:py-32">
     <div class="mb-12 flex items-end justify-between gap-6 md:mb-20">
-      <h2 class="display text-4xl md:text-6xl" data-reveal>Последние <em>кейсы</em></h2>
+      <h2 class="display text-4xl md:text-6xl" data-reveal>Свежие <em>кейсы</em></h2>
       <a href={url('/work')} class="link-line hidden pb-2 text-sm text-muted hover:text-fg sm:inline" data-reveal>Все работы →</a>
     </div>
-    <CaseGrid items={latest} stagger />
+    <CaseGrid items={latest} stagger fromPath="/" />
     <div class="mt-16 flex justify-center" data-reveal>
       <a href={url('/work')} class="rounded-full border border-fg/30 px-7 py-3.5 text-sm transition-colors hover:border-fg">
         Все работы

@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CaseGrid from '../../components/CaseGrid.astro';
 import ContactCta from '../../components/ContactCta.astro';
-import { person } from '../../data/site';
 
 const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
 const uniq = <T,>(xs: T[]) => [...new Set(xs)];
@@ -13,16 +12,13 @@ const groups = [
   { key: 'platform', label: 'Платформа', options: uniq(cases.flatMap((c) => c.data.platforms)) },
   { key: 'org', label: 'Организация', options: uniq(cases.map((c) => c.data.org)) },
   // Форматы показываем всегда, даже если кейсов в них пока нет.
-  { key: 'format', label: 'Формат', options: ['Сервис', 'Фича', 'Лендинг', 'Паттерн', 'Редполитика'] },
+  { key: 'format', label: 'Формат', options: ['Сервис', 'Фича', 'Лендинг', 'Мессенджер', 'Паттерн', 'Редполитика'] },
 ];
 ---
 
 <Base title="Работы" description="Все кейсы Марии Молодцовой: банковские сервисы, CRM, мессенджеры и лендинги.">
   <section class="px-5 pt-32 md:px-10 md:pt-44">
     <h1 class="display text-[clamp(2.6rem,7vw,6.5rem)]" data-reveal>Все <em>работы</em></h1>
-    <p class="mt-6 max-w-xl text-muted" data-reveal>
-      Продуктовые кейсы и фичи для банков, CRM и мессенджеров. Названия банков скрыты из-за NDA.
-    </p>
   </section>
 
   <section class="px-5 pt-14 md:px-10" data-filters data-reveal>
@@ -62,32 +58,12 @@ const groups = [
   </section>
 
   <section class="px-5 pb-10 pt-12 md:px-10 md:pt-20">
-    <CaseGrid items={cases} />
+    <CaseGrid items={cases} fromPath="/work" />
     <div class="hidden py-20 text-center" data-empty>
-      <p class="text-lg">Кейсы скоро появятся</p>
+      <p class="text-lg">Эти работы пока живут на моём компьютере. Скоро перенесу их сюда — обещаю!</p>
       <button type="button" class="link-line mt-4 text-sm text-fg hover:text-accent" data-reset>
         Сбросить все фильтры
       </button>
-    </div>
-  </section>
-
-  <section class="px-5 pt-16 md:px-10">
-    <div class="flex flex-col gap-6 rounded-2xl border border-line p-8 md:flex-row md:items-center md:justify-between md:p-12" data-reveal>
-      <div>
-        <p class="eyebrow">Архив</p>
-        <h2 class="mt-3 text-2xl font-normal tracking-tight md:text-3xl">Ранние работы и фриланс</h2>
-        <p class="mt-3 max-w-xl text-muted">
-          Коммерческие сайты, лендинги и UX/UI-проекты до перехода в продуктовый дизайн. Это мой путь, но уже не мой текущий уровень.
-        </p>
-      </div>
-      <a
-        href={person.behance}
-        target="_blank"
-        rel="noopener"
-        class="shrink-0 rounded-full bg-fg px-6 py-3.5 text-center text-sm font-medium text-bg transition-transform hover:scale-[1.04]"
-      >
-        Архив на Behance →
-      </a>
     </div>
   </section>
 
