@@ -27,7 +27,7 @@ const { title, year, excerpt, org, cover, coverImage } = item.data;
       coverImage ? (
         <img src={url(coverImage)} alt={cover} loading="lazy" class="block h-auto w-full rounded-[4px]" />
       ) : item.id === 'business-account-in-progress' ? (
-        <div class="grid h-[400px] place-items-center rounded-[4px] bg-[#201e24] text-lg">Скоро</div>
+        <div class="grid aspect-video place-items-center rounded-[4px] bg-[#201e24] text-lg">Скоро</div>
       ) : (
         <Placeholder caption={cover} ratio={ratio} />
       )
