@@ -124,6 +124,15 @@ const backHref = from === '/' ? url('/') : url('/work');
     overflow: hidden;
   }
 
+  :global(html.has-cursor dialog[data-image-viewer][open]),
+  :global(html.has-cursor dialog[data-image-viewer][open] *) {
+    cursor: auto !important;
+  }
+
+  :global(html.has-cursor dialog[data-image-viewer][open] [data-image-close]) {
+    cursor: pointer !important;
+  }
+
   .prose-case :global(img) {
     display: block;
     width: 100%;
