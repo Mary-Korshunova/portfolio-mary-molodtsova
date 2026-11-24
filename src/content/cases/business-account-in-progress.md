@@ -7,6 +7,7 @@ year: 2026
 platforms: ["Адаптив", "Мобильное приложение"]
 format: "Сервис"
 home: false
+comingSoon: true
 order: 2
 cover: "Обложка кейса появится позже"
 ---

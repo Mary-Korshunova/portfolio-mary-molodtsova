@@ -3,12 +3,13 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CaseGrid from '../../components/CaseGrid.astro';
 import ContactCta from '../../components/ContactCta.astro';
+import { caseYears, compareCases } from '../../data/cases';
 
-const cases = (await getCollection('cases')).sort((a, b) => b.data.year - a.data.year || a.data.order - b.data.order);
+const cases = (await getCollection('cases')).sort(compareCases);
 const uniq = <T,>(xs: T[]) => [...new Set(xs)];
 
 const groups = [
-  { key: 'year', label: 'Год', options: uniq(cases.map((c) => String(c.data.year))).sort().reverse() },
+  { key: 'year', label: 'Год', options: uniq(cases.flatMap((c) => caseYears(c.data))).sort((a, b) => b - a).map(String) },
   { key: 'platform', label: 'Платформа', options: uniq(cases.flatMap((c) => c.data.platforms)) },
   { key: 'org', label: 'Организация', options: uniq(cases.map((c) => c.data.org)) },
   // Форматы показываем всегда, даже если кейсов в них пока нет.

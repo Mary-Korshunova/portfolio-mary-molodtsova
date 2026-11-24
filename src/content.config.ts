@@ -10,6 +10,8 @@ const cases = defineCollection({
     excerpt: z.string(),
     org: z.string(),
     year: z.number(),
+    yearEnd: z.number().optional(),
+    comingSoon: z.boolean().default(false),
     platforms: z.array(z.string()),
     format: z.enum(['Сервис', 'Фича', 'Лендинг', 'Мессенджер', 'Паттерн', 'Редполитика', 'ИИ-прототип']),
     home: z.boolean().default(false),

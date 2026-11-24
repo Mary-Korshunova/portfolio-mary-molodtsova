@@ -2,10 +2,11 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ContactCta from '../../components/ContactCta.astro';
+import { caseYearLabel, compareCases } from '../../data/cases';
 import { url } from '../../data/site';
 
 export async function getStaticPaths() {
-  const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
+  const cases = (await getCollection('cases')).sort(compareCases);
   return cases.map((item, i) => ({ params: { slug: item.id }, props: { item, next: cases[(i + 1) % cases.length] } }));
 }
 
@@ -16,10 +17,13 @@ const prototypes = item.id === 'katusha-max' ? [
   { image: '/assets/previews/katusha-mobile.webp', href: 'https://mary-korshunova.github.io/Katusha-mobile/', label: 'Мобильный сценарий для действующих клиентов' },
   { image: '/assets/previews/katusha-desktop.webp', href: 'https://mary-korshunova.github.io/Katusha/', label: 'Десктопный сценарий для новых клиентов' },
 ] : [];
+const platforms = d.platforms.map((platform, index) =>
+  index === 0 ? platform : platform.replace(/^[А-ЯЁ](?=[а-яё])/, (letter) => letter.toLowerCase()),
+).join(', ');
 const meta = [
   { label: 'Организация', value: d.org },
-  { label: 'Год', value: String(d.year) },
-  { label: 'Платформа', value: d.platforms.map((p) => p === 'Адаптив' ? 'адаптив' : p).join(', ') },
+  { label: 'Год', value: caseYearLabel(d) },
+  { label: 'Платформа', value: platforms },
   { label: 'Формат', value: d.format },
 ];
 const from = Astro.url.searchParams.get('from');

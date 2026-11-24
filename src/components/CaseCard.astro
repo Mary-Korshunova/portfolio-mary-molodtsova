@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Placeholder from './Placeholder.astro';
+import { caseYearLabel, caseYears } from '../data/cases';
 import { url } from '../data/site';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
   fromPath?: string;
 }
 const { item, ratio = '8 / 11', fromPath = '/work' } = Astro.props;
-const { title, year, excerpt, org, cover, coverImage } = item.data;
+const { title, excerpt, org, cover, coverImage, comingSoon } = item.data;
 ---
 
 <a
@@ -17,7 +18,7 @@ const { title, year, excerpt, org, cover, coverImage } = item.data;
   class="block"
   data-reveal
   data-case
-  data-year={item.data.year}
+  data-year={caseYears(item.data).join('|')}
   data-platform={item.data.platforms.join('|')}
   data-org={org}
   data-format={item.data.format}
@@ -26,7 +27,7 @@ const { title, year, excerpt, org, cover, coverImage } = item.data;
     {
       coverImage ? (
         <img src={url(coverImage)} alt={cover} loading="lazy" class="block h-auto w-full rounded-[4px]" />
-      ) : item.id === 'business-account-in-progress' ? (
+      ) : comingSoon ? (
         <div class="grid aspect-video place-items-center rounded-[4px] bg-[#201e24] text-lg">Скоро</div>
       ) : (
         <Placeholder caption={cover} ratio={ratio} />
@@ -34,7 +35,7 @@ const { title, year, excerpt, org, cover, coverImage } = item.data;
     }
   </div>
   <h3 class="mt-6 text-xl font-normal tracking-tight md:text-[1.375rem]">
-    {title} <span class="whitespace-nowrap text-muted"><span aria-hidden="true">•</span> {year}</span>
+    {title} <span class="whitespace-nowrap text-muted"><span aria-hidden="true">•</span> {caseYearLabel(item.data)}</span>
   </h3>
   <p class="mt-2 max-w-md text-[15px] leading-relaxed text-muted">{excerpt}</p>
 </a>
