@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import CaseGrid from '../../components/CaseGrid.astro';
 import ContactCta from '../../components/ContactCta.astro';
 
-const cases = (await getCollection('cases')).sort((a, b) => a.data.order - b.data.order);
+const cases = (await getCollection('cases')).sort((a, b) => b.data.year - a.data.year || a.data.order - b.data.order);
 const uniq = <T,>(xs: T[]) => [...new Set(xs)];
 
 const groups = [

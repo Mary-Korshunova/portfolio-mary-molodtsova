@@ -7,7 +7,7 @@ year: 2026
 platforms: ["Веб", "Адаптив"]
 format: "Мессенджер"
 home: true
-order: 2
+order: 4
 cover: "Превью прототипа Катюши в MAX: мобильный и десктопный интерфейсы"
 coverImage: "/assets/previews/katusha-max.png"
 ---

@@ -7,9 +7,9 @@ year: 2024
 platforms: ["Веб"]
 format: "Лендинг"
 home: false
-order: 8
-cover: "Обложка: первый экран сайта Домаптеки с маскотом"
-coverImage: "/assets/previews/domapteka.webp"
+order: 10
+cover: "Обложка: первый экран сайта Домаптеки с макетами приложения"
+coverImage: "/assets/previews/domapteka.png"
 ---
 
 Роль: UI/UX Designer

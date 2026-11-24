@@ -7,7 +7,7 @@ year: 2024
 platforms: ["Веб", "Мобильное приложение"]
 format: "Фича"
 home: false
-order: 7
+order: 8
 cover: "Обложка: один и тот же экран чата в светлой и тёмной теме рядом"
 coverImage: "/assets/previews/dark-theme.webp"
 ---

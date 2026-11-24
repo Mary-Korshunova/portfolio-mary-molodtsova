@@ -7,7 +7,7 @@ year: 2025
 platforms: ["Веб", "Мобильное приложение"]
 format: "Сервис"
 home: true
-order: 3
+order: 5
 cover: "Обложка: экран кредитной линии с траншами в интернет-банке + мобильная версия"
 coverImage: "/assets/previews/credit-line.png"
 ---

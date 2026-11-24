@@ -7,7 +7,7 @@ year: 2024
 platforms: ["Веб", "Мобильное приложение"]
 format: "Фича"
 home: false
-order: 5
+order: 7
 cover: "Обложка: панель закрепов в чате мессенджера (десктоп + телефон)"
 coverImage: "/assets/previews/pinned-messages.webp"
 ---

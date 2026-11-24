@@ -7,7 +7,7 @@ year: 2026
 platforms: ["Мобильное приложение", "Веб"]
 format: "Сервис"
 home: true
-order: 2
+order: 3
 cover: "Обложка: экраны регистрации ИП в мобильном приложении (2–3 телефона)"
 coverImage: "/assets/previews/business-registration.png"
 ---

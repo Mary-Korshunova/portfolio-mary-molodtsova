@@ -7,7 +7,7 @@ year: 2024
 platforms: ["Веб"]
 format: "Фича"
 home: false
-order: 6
+order: 9
 cover: "Обложка: шаг бота с настройкой List Message в визуальном конструкторе"
 coverImage: "/assets/previews/whatsapp-list-message.webp"
 ---

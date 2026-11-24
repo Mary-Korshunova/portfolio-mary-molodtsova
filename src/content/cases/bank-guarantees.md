@@ -7,7 +7,7 @@ year: 2025
 platforms: ["Веб"]
 format: "Сервис"
 home: false
-order: 4
+order: 6
 cover: "Обложка: форма заявки на гарантию и список гарантий в интернет-банке"
 coverImage: "/assets/previews/bank-guarantees.webp"
 ---
