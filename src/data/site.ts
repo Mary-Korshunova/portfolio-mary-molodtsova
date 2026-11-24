@@ -9,7 +9,7 @@ export const telegramUrl = `https://t.me/${person.telegram}`;
 
 export const facts = [
   { label: 'Город', value: 'Москва' },
-  { label: 'Опыт', value: 'От 3 лет' },
+  { label: 'Опыт', value: '5 лет' },
   { label: 'Ключевые навыки', value: 'UX/UI-дизайн, продуктовый дизайн' },
   { label: 'Формат', value: 'Удалённо или гибрид' },
 ];
