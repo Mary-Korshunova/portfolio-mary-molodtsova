@@ -9,7 +9,7 @@ format: "Сервис"
 home: true
 order: 2
 cover: "Обложка: экраны регистрации ИП в мобильном приложении (2–3 телефона)"
-coverImage: "/assets/previews/business-registration.webp"
+coverImage: "/assets/previews/business-registration.png"
 ---
 
 ## О проекте

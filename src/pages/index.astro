@@ -5,7 +5,9 @@ import CaseGrid from '../components/CaseGrid.astro';
 import ContactCta from '../components/ContactCta.astro';
 import { facts, url } from '../data/site';
 
-const latest = (await getCollection('cases', (c) => c.data.home)).sort((a, b) => a.data.order - b.data.order).slice(0, 4);
+const caseOrder = ['online-account', 'katusha-max', 'business-registration', 'credit-line'];
+const cases = await getCollection('cases');
+const latest = caseOrder.flatMap((id) => cases.filter((item) => item.id === id && item.data.home));
 
 // Строки заголовка появляются по очереди.
 const heading = [
@@ -28,7 +30,7 @@ const heading = [
       }
     </h1>
 
-    <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-7 md:mt-16 lg:grid-cols-4" data-reveal>
+    <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-7 border-y border-line py-6 md:mt-16 lg:grid-cols-4" data-reveal>
       {facts.map((fact) => (
         <div>
           <dt class="eyebrow">{fact.label}</dt>
@@ -39,9 +41,8 @@ const heading = [
   </section>
 
   <section class="px-5 pb-10 pt-8 md:px-10 md:pb-16 md:pt-12" aria-label="Кейсы">
-    <div class="border-t border-line pb-8 md:pb-12"></div>
     <CaseGrid items={latest} featured fromPath="/" />
-    <div class="mt-8 flex justify-center md:mt-20" data-reveal>
+    <div class="mt-[60px] flex justify-center" data-reveal>
       <a href={url('/work')} class="rounded-full border border-fg/30 px-7 py-3.5 text-sm transition-colors hover:border-fg">
         Все работы
       </a>

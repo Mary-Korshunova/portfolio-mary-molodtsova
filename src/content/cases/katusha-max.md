@@ -9,7 +9,7 @@ format: "Мессенджер"
 home: true
 order: 2
 cover: "Превью прототипа Катюши в MAX: мобильный и десктопный интерфейсы"
-coverImage: "/assets/previews/katusha-max.webp"
+coverImage: "/assets/previews/katusha-max.png"
 ---
 
 ## О проекте

@@ -9,7 +9,7 @@ format: "Сервис"
 home: true
 order: 1
 cover: "Обложка: ключевой экран онлайн-открытия счёта (развилка выбора сценария) на ноутбуке"
-coverImage: "/assets/previews/online-account.webp"
+coverImage: "/assets/previews/online-account.png"
 ---
 
 ## О проекте

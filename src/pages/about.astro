@@ -19,13 +19,26 @@ const photos = Array.from({ length: 33 }, (_, i) => {
   </section>
 
   <section class="px-5 py-16 md:px-10 md:py-24">
-    <div class="flex snap-x snap-mandatory items-start gap-3 overflow-x-auto pb-3 lg:grid lg:snap-none lg:grid-cols-8 lg:overflow-visible lg:pb-0" tabindex="0" data-lenis-prevent-horizontal role="region" aria-label="Фотографии">
+    <div class="columns-2 gap-3 select-none sm:columns-4 lg:columns-8" role="region" aria-label="Фотографии" data-photo-gallery>
       {photos.map((photo) => (
-        <figure class="w-[72%] shrink-0 snap-start sm:w-[35%] lg:w-auto">
-          <img src={url(photo.src)} alt={photo.alt} loading="lazy" decoding="async" class="block h-auto w-full rounded-[4px]" />
+        <figure class="mb-3 break-inside-avoid">
+          <img src={url(photo.src)} alt={photo.alt} loading="lazy" decoding="async" draggable="false" class="pointer-events-none block h-auto w-full rounded-[4px]" />
         </figure>
       ))}
     </div>
   </section>
   <ContactCta />
 </Base>
+
+<style>
+  [data-photo-gallery] {
+    -webkit-touch-callout: none;
+  }
+</style>
+
+<script>
+  const gallery = document.querySelector('[data-photo-gallery]');
+  for (const eventName of ['contextmenu', 'dragstart', 'copy']) {
+    gallery?.addEventListener(eventName, (event) => event.preventDefault());
+  }
+</script>
