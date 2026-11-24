@@ -172,7 +172,7 @@ showCoverInCase: false
 
 Это позволило сделать сложный процесс понятным даже для пользователей, которые впервые работают с электронной подписью.
 
-<figure class="ph"><div class="ph-box"></div><figcaption>Здесь будут макеты подписания.</figcaption></figure>
+![Макеты сценариев подписания документов](../../assets/cases/online-account/signing.png)
 
 ## Результаты
 
