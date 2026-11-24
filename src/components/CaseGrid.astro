@@ -14,7 +14,7 @@ const { items, featured = false, fromPath = '/work' } = Astro.props;
   class:list={[
     featured
       ? 'grid items-start gap-8 md:grid-cols-2'
-      : 'columns-1 gap-6 sm:columns-2 [&>[data-case]]:mb-14 [&>[data-case]]:break-inside-avoid',
+      : 'grid items-start gap-x-6 gap-y-14 sm:grid-cols-2',
   ]}
   data-grid
 >
