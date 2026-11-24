@@ -9,6 +9,7 @@ format: "Фича"
 home: false
 order: 5
 cover: "Обложка: панель закрепов в чате мессенджера (десктоп + телефон)"
+coverImage: "/assets/previews/pinned-messages.webp"
 ---
 
 ## О проекте

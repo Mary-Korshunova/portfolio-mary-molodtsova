@@ -9,6 +9,7 @@ format: "Сервис"
 home: true
 order: 3
 cover: "Обложка: экран кредитной линии с траншами в интернет-банке + мобильная версия"
+coverImage: "/assets/previews/credit-line.webp"
 ---
 
 ## О проекте

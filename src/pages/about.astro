@@ -19,10 +19,10 @@ const photos = Array.from({ length: 33 }, (_, i) => {
   </section>
 
   <section class="px-5 py-16 md:px-10 md:py-24">
-    <div class="columns-2 gap-3 sm:gap-5 lg:columns-3 [&>*]:mb-3 [&>*]:break-inside-avoid sm:[&>*]:mb-5">
-      {photos.map((photo, i) => (
-        <figure class="mb-3 overflow-hidden rounded sm:mb-5" data-reveal style={`--reveal-delay: ${(i % 3) * 80}ms`}>
-          <img src={url(photo.src)} alt={photo.alt} loading="lazy" decoding="async" class="block h-auto w-full rounded" />
+    <div class="flex snap-x snap-mandatory items-start gap-3 overflow-x-auto pb-3 lg:grid lg:snap-none lg:grid-cols-8 lg:overflow-visible lg:pb-0" tabindex="0" data-lenis-prevent-horizontal role="region" aria-label="Фотографии">
+      {photos.map((photo) => (
+        <figure class="w-[72%] shrink-0 snap-start sm:w-[35%] lg:w-auto">
+          <img src={url(photo.src)} alt={photo.alt} loading="lazy" decoding="async" class="block h-auto w-full rounded-[4px]" />
         </figure>
       ))}
     </div>

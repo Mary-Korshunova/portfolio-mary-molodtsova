@@ -9,8 +9,7 @@ format: "Лендинг"
 home: false
 order: 8
 cover: "Обложка: первый экран сайта Домаптеки с маскотом"
-coverImage: "/assets/previews/09.webp"
-cardRatio: "16 / 9"
+coverImage: "/assets/previews/domapteka.webp"
 ---
 
 Роль: UI/UX Designer

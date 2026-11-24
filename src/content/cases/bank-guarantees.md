@@ -9,6 +9,7 @@ format: "Сервис"
 home: false
 order: 4
 cover: "Обложка: форма заявки на гарантию и список гарантий в интернет-банке"
+coverImage: "/assets/previews/bank-guarantees.webp"
 ---
 
 ## О проекте

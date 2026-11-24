@@ -12,6 +12,10 @@ export async function getStaticPaths() {
 const { item, next } = Astro.props;
 const { Content } = await render(item);
 const d = item.data;
+const prototypes = item.id === 'katusha-max' ? [
+  { image: '/assets/previews/katusha-mobile.webp', href: 'https://mary-korshunova.github.io/Katusha-mobile/', label: 'Мобильный сценарий для действующих клиентов' },
+  { image: '/assets/previews/katusha-desktop.webp', href: 'https://mary-korshunova.github.io/Katusha/', label: 'Десктопный сценарий для новых клиентов' },
+] : [];
 const meta = [
   { label: 'Организация', value: d.org },
   { label: 'Год', value: String(d.year) },
@@ -23,7 +27,7 @@ const backHref = from === '/' ? url('/') : url('/work');
 ---
 
 <Base title={d.title} description={d.excerpt}>
-  <article>
+  <article tabindex="-1" class="outline-none" data-case-article>
     <header class="px-5 pt-32 md:px-10 md:pt-44">
       <a href={backHref} class="link-line text-sm text-muted hover:text-fg" data-reveal data-back>← Назад</a>
       <h1 class="display mt-8 max-w-[20ch] text-[clamp(2.4rem,6vw,5.5rem)]" data-reveal>{d.title}</h1>
@@ -34,6 +38,18 @@ const backHref = from === '/' ? url('/') : url('/work');
     </header>
     <div class="prose-case mx-auto max-w-[44rem] px-5 py-16 md:py-24"><Content /></div>
   </article>
+  {prototypes.length > 0 && (
+    <aside class="mx-auto grid max-w-[64rem] grid-cols-[1fr_2fr] items-start gap-3 px-5 pb-16 md:gap-6 md:pb-24" aria-label="Прототипы Катюши">
+      {prototypes.map(({ image, href, label }) => (
+        <a href={href} target="_blank" rel="noopener noreferrer" data-cursor="view">
+          <img src={url(image)} alt={label} loading="lazy" class="block h-auto w-full rounded-[4px]" />
+        </a>
+      ))}
+    </aside>
+  )}
+  <button type="button" data-scroll-top class="fixed right-5 bottom-5 z-30 grid size-12 place-items-center rounded-full border border-line bg-surface text-2xl transition-colors hover:border-fg md:right-10 md:bottom-10" aria-label="Наверх" hidden>
+    <span aria-hidden="true">↑</span>
+  </button>
   <nav class="px-5 md:px-10" aria-label="Следующий кейс">
     <a href={url(`/work/${next.id}`)} class="group block border-t border-line pt-10" data-reveal>
       <p class="eyebrow">Следующий кейс</p>
@@ -44,6 +60,17 @@ const backHref = from === '/' ? url('/') : url('/work');
 </Base>
 
 <script>
+  const scrollTop = document.querySelector<HTMLButtonElement>('[data-scroll-top]')!;
+  const syncScrollTop = () => { scrollTop.hidden = window.scrollY < 320; };
+  window.addEventListener('scroll', syncScrollTop, { passive: true });
+  syncScrollTop();
+
+  scrollTop.addEventListener('click', () => {
+    document.querySelector<HTMLElement>('[data-case-article]')?.focus({ preventScroll: true });
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'instant' : 'smooth' });
+  });
+
   document.querySelector<HTMLAnchorElement>('[data-back]')?.addEventListener('click', (event) => {
     if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) {
       event.preventDefault();

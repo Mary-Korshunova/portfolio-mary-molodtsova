@@ -9,6 +9,7 @@ format: "Фича"
 home: false
 order: 6
 cover: "Обложка: шаг бота с настройкой List Message в визуальном конструкторе"
+coverImage: "/assets/previews/whatsapp-list-message.webp"
 ---
 
 ## О проекте

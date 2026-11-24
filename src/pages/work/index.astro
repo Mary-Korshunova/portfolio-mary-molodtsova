@@ -72,8 +72,8 @@ const groups = [
   const cards = [...document.querySelectorAll<HTMLElement>('[data-grid] [data-case]')];
   const count = document.querySelector('[data-count]')!;
   const empty = document.querySelector<HTMLElement>('[data-empty]')!;
-  const resets = document.querySelectorAll<HTMLButtonElement>('[data-reset]');
-  const active: Record<string, string | null> = {};
+  const reset = document.querySelector<HTMLButtonElement>('[data-reset]')!;
+  let active: HTMLButtonElement | null = null;
 
   const matches = (card: HTMLElement, key: string, value: string) =>
     (card.dataset[key] ?? '').split('|').includes(value);
@@ -81,7 +81,7 @@ const groups = [
   const apply = () => {
     let shown = 0;
     for (const card of cards) {
-      const ok = Object.entries(active).every(([k, v]) => !v || matches(card, k, v));
+      const ok = !active || matches(card, active.dataset.key!, active.dataset.value!);
       card.hidden = !ok;
       if (ok) {
         card.classList.add('is-in');
@@ -90,23 +90,18 @@ const groups = [
     }
     count.textContent = String(shown);
     empty.classList.toggle('hidden', shown > 0);
-    const any = Object.values(active).some(Boolean);
-    // Кнопка видна всегда; неактивна, пока ни один фильтр не выбран
-    if (resets[0]) resets[0].disabled = !any;
-    for (const b of buttons) b.setAttribute('aria-pressed', String(active[b.dataset.key!] === b.dataset.value));
+    reset.disabled = !active;
+    for (const button of buttons) button.setAttribute('aria-pressed', String(button === active));
   };
 
   for (const b of buttons) {
     b.addEventListener('click', () => {
-      const key = b.dataset.key!;
-      active[key] = active[key] === b.dataset.value ? null : b.dataset.value!;
+      active = active === b ? null : b;
       apply();
     });
   }
-  resets.forEach((r) =>
-    r.addEventListener('click', () => {
-      for (const k of Object.keys(active)) active[k] = null;
-      apply();
-    }),
-  );
+  reset.addEventListener('click', () => {
+    active = null;
+    apply();
+  });
 </script>

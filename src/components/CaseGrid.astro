@@ -23,7 +23,7 @@ const { items, stagger = false, fromPath = '/work' } = Astro.props;
     </div>
   ) : (
     <div class="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3" data-grid>
-      {items.map((item) => <CaseCard item={item} ratio={item.data.cardRatio ?? '4 / 5'} fromPath={fromPath} />)}
+      {items.map((item) => <CaseCard item={item} ratio="4 / 5" fromPath={fromPath} />)}
     </div>
   )
 }
