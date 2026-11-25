@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { person, telegramUrl, url } from '../data/site';
+import { experienceLabel, person, telegramUrl, url } from '../data/site';
 
 // Источник: резюме hh.ru (май 2025), обновлено на фамилию Молодцова.
 // Телефон, дату рождения и адрес не публикуем.
@@ -12,7 +12,7 @@ const experience: {
 }[] = [
   {
     period: 'Апрель 2024 — настоящее время',
-    company: 'Промсвязьбанк, ПАО',
+    company: 'ПАО «Банк ПСБ»',
     role: 'Продуктовый дизайнер',
     sections: [
       { text: 'Работаю продуктовым дизайнером в команде ЛКПК (личного кабинета потенциального клиента).' },
@@ -133,18 +133,6 @@ const skills = [
         <h1 class="display text-[clamp(2.6rem,7vw,6.5rem)]">{person.name}</h1>
         <p class="mt-4 text-lg text-muted">{person.role} · Москва · удалённо или&nbsp;гибрид</p>
       </div>
-      <div class="flex flex-wrap gap-3 print:hidden" data-reveal>
-        <a
-          href={url('/assets/maria-molodtsova-resume.pdf')}
-          download="Мария Молодцова.pdf"
-          class="rounded-full bg-fg px-6 py-3.5 text-sm font-medium text-bg transition-transform hover:scale-[1.04]"
-        >
-          Скачать в PDF
-        </a>
-        <a href={telegramUrl} target="_blank" rel="noopener" class="rounded-full border border-line px-6 py-3.5 text-sm hover:border-fg/40">
-          Написать в Telegram
-        </a>
-      </div>
     </div>
 
     <p class="mt-8 hidden text-sm print:block">{person.email} · t.me/{person.telegram}</p>
@@ -154,7 +142,20 @@ const skills = [
       решений. Люблю аккуратность в&nbsp;макетах, чувство вовлечённости в&nbsp;продукт и&nbsp;стремление команды к&nbsp;качественному результату.
     </p>
 
-    <h2 class="eyebrow mt-20 border-t border-line pt-6" data-reveal>Опыт · 4 года 9 месяцев</h2>
+    <div class="mt-8 flex flex-wrap gap-3 print:hidden" data-reveal>
+      <a
+        href={url('/assets/maria-molodtsova-resume.pdf')}
+        download="Мария Молодцова.pdf"
+        class="rounded-full bg-fg px-6 py-3.5 text-sm font-medium text-bg transition-transform hover:scale-[1.04]"
+      >
+        Скачать в PDF
+      </a>
+      <a href={telegramUrl} target="_blank" rel="noopener" class="rounded-full border border-line px-6 py-3.5 text-sm hover:border-fg/40">
+        Написать в Telegram
+      </a>
+    </div>
+
+    <h2 class="eyebrow mt-20 border-t border-line pt-6" data-reveal>Опыт · {experienceLabel}</h2>
     <div class="divide-y divide-line">
       {
         experience.map((job) => (

@@ -7,9 +7,11 @@ export const person = {
 
 export const telegramUrl = `https://t.me/${person.telegram}`;
 
+export const experienceLabel = '3+ года';
+
 export const facts = [
   { label: 'Город', value: 'Москва' },
-  { label: 'Опыт', value: '4+ года' },
+  { label: 'Опыт', value: experienceLabel },
   { label: 'Ключевые навыки', value: 'Продуктовый дизайн, UX/UI' },
   { label: 'Формат', value: 'Удалённо или гибрид' },
 ];

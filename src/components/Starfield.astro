@@ -1,6 +1,6 @@
 ---
-// Фон из мерцающих точек, медленно дрейфующих; при скролле слои смещаются с разной скоростью.
-// Оптимизация: холст в 1×, звёзды — копии готового спрайта; без скролла — ~30 кадров/с (мерцание медленное).
+// Фон из мерцающих точек, падающих сверху вниз.
+// Оптимизация: холст в 1×, звёзды — копии готового спрайта; ~30 кадров/с.
 ---
 
 <canvas class="pointer-events-none fixed inset-0 z-0 h-full w-full" aria-hidden="true" data-starfield></canvas>
@@ -48,10 +48,9 @@
 
   const draw = (t: number) => {
     ctx.clearRect(0, 0, w, h);
-    const scroll = window.scrollY;
     for (const s of stars) {
       const tw = reduced ? 0.7 : 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * 0.001 * s.speed + s.phase));
-      const y = (((s.y - scroll * (0.05 + s.depth * 0.25) - t * 0.004 * s.depth) % h) + h) % h;
+      const y = (s.y + t * (0.018 + 0.047 * s.depth)) % h;
       const x = (((s.x + t * s.drift * 0.05) % w) + w) % w;
       ctx.globalAlpha = tw * (0.3 + s.depth * 0.6);
       ctx.drawImage(dot, x - s.r, y - s.r, s.r * 2, s.r * 2);
@@ -59,14 +58,10 @@
   };
 
   let lastDraw = 0;
-  let lastScroll = -1;
   const loop = (t: number) => {
-    // При прокрутке — каждый кадр (параллакс плавный), иначе ~30 кадров/с
-    const scrolled = window.scrollY !== lastScroll;
-    if (scrolled || t - lastDraw > 32) {
+    if (t - lastDraw > 32) {
       draw(t);
       lastDraw = t;
-      lastScroll = window.scrollY;
     }
     requestAnimationFrame(loop);
   };
@@ -74,11 +69,10 @@
   resize();
   window.addEventListener('resize', () => {
     resize();
-    draw(performance.now());
+    draw(reduced ? 0 : performance.now());
   });
   if (reduced) {
     draw(0);
-    window.addEventListener('scroll', () => draw(0), { passive: true });
   } else {
     requestAnimationFrame(loop);
   }
