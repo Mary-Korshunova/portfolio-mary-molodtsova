@@ -22,4 +22,4 @@ coverImage: "/assets/previews/katusha-max.png"
 
 Материалы прототипов доступны по закрытым ссылкам. Их можно посмотреть на интервью, где я также расскажу о ходе работы и принятых решениях.
 
-[Презентация проекта в Figma](https://www.figma.com/deck/ti8hRsDClNGr2zznGPj8Y0)
+<a href="https://www.figma.com/deck/ti8hRsDClNGr2zznGPj8Y0" target="_blank" rel="noopener noreferrer">Презентация проекта в Figma</a>
