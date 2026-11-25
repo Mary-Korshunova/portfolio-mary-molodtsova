@@ -34,8 +34,8 @@ const backHref = from === '/' ? url('/') : url('/work');
   <article tabindex="-1" class="outline-none" data-case-article>
     <header class="px-5 pt-32 md:px-10 md:pt-44">
       <a href={backHref} class="link-line text-sm text-muted hover:text-fg" data-reveal data-back>← Назад</a>
-      <h1 class="display mt-8 max-w-[20ch] text-[clamp(2.4rem,6vw,5.5rem)]" data-reveal>{d.title}</h1>
-      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted md:text-xl" data-reveal>{d.lead}</p>
+      <h1 class="display mt-8 max-w-[20ch] text-[clamp(2.25rem,6vw,5.5rem)]" data-reveal>{d.title}</h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted whitespace-pre-line md:text-xl" data-reveal>{d.lead}</p>
       <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-line pt-6 md:grid-cols-4" data-reveal>
         {meta.map((m) => <div><dt class="eyebrow">{m.label}</dt><dd class="mt-2 text-[15px]">{m.value}</dd></div>)}
       </dl>
@@ -50,10 +50,11 @@ const backHref = from === '/' ? url('/') : url('/work');
     </div>
   </article>
   <dialog data-image-viewer data-lenis-prevent aria-label="Просмотр изображения" class="fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none place-items-center bg-transparent p-4 text-fg backdrop:bg-black/90 open:grid md:p-12">
-    <button type="button" data-image-close autofocus aria-label="Закрыть изображение" class="absolute top-4 right-4 grid size-11 cursor-pointer place-items-center rounded-full border border-line bg-surface text-2xl select-none">
+    <button type="button" data-image-close autofocus aria-label="Закрыть изображение" class="absolute z-10 top-4 right-4 grid size-11 cursor-pointer place-items-center rounded-full border border-line bg-surface text-2xl select-none">
       <span aria-hidden="true" class="pointer-events-none">×</span>
     </button>
-    <img alt="" class="max-h-[calc(100dvh-7rem)] max-w-full rounded-[4px] bg-white object-contain" />
+    <p data-image-zoom hidden style="position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:1;max-width:calc(100vw - 2rem);width:max-content;padding:.55rem .85rem;border-radius:8px;background:#202126;color:white;text-align:center;font-size:.875rem">Shift + колёсико или + / − — масштаб. Перетащите мышью. 0 — сброс.</p>
+    <img alt="" class="max-h-[calc(100dvh-7rem)] max-w-full rounded-[4px] bg-black object-contain" />
   </dialog>
   {prototypes.length > 0 && (
     <aside class="mx-auto grid max-w-[64rem] grid-cols-[minmax(0,495fr)_minmax(0,1420fr)] items-start px-5 pb-16 md:pb-24" aria-label="Прототипы Катюши">
@@ -64,8 +65,8 @@ const backHref = from === '/' ? url('/') : url('/work');
       ))}
     </aside>
   )}
-  <button type="button" data-scroll-top class="fixed right-5 bottom-5 z-30 grid size-12 place-items-center rounded-full border border-line bg-surface text-2xl transition-colors hover:border-fg md:right-10 md:bottom-10" aria-label="Наверх" hidden>
-    <span aria-hidden="true">↑</span>
+  <button type="button" data-scroll-top class="fixed right-5 bottom-5 z-30 grid size-12 cursor-pointer place-items-center rounded-full border border-line bg-surface text-2xl transition-colors hover:border-fg md:right-10 md:bottom-10" aria-label="Наверх" hidden>
+    <span aria-hidden="true" class="pointer-events-none">↑</span>
   </button>
   <nav class="px-5 md:px-10" aria-label="Следующий кейс">
     <a href={url(`/work/${next.id}`)} class="group block border-t border-line pt-10" data-reveal>
@@ -119,11 +120,128 @@ const backHref = from === '/' ? url('/') : url('/work');
   });
 </script>
 
-<style>
-  [data-image-viewer] img:is([src*="/flow."], [src*="%2Fflow."]) {
-    background-color: black;
+<script is:inline>
+{
+  const dialog = document.querySelector('[data-image-viewer]');
+  const image = dialog.querySelector('img');
+  const hint = dialog.querySelector('[data-image-zoom]');
+  let scale = 1;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  function zoomTo(next, x, y) {
+    const ratio = next / scale;
+    offsetX = next === 1 ? 0 : x - (x - offsetX) * ratio;
+    offsetY = next === 1 ? 0 : y - (y - offsetY) * ratio;
+    scale = next;
+    image.toggleAttribute('data-zoomed', scale > 1);
+    image.style.transformOrigin = 'top left';
+    image.style.transform = next === 1 ? '' : 'translate(' + offsetX + 'px,' + offsetY + 'px) scale(' + scale + ')';
   }
 
+  function changeZoom(direction, cursorX, cursorY) {
+    const maxScale = Math.max(1, image.naturalWidth / image.offsetWidth);
+    const next = Math.min(maxScale, Math.max(1, scale * 1.3 ** direction));
+    const rect = image.getBoundingClientRect();
+    const x = cursorX - rect.left + offsetX;
+    const y = cursorY - rect.top + offsetY;
+    zoomTo(next, x, y);
+  }
+
+  const observer = new MutationObserver(() => {
+    hint.hidden = !dialog.open;
+    dialog.style.overflow = hint.hidden ? '' : 'hidden';
+    dialog.style.touchAction = hint.hidden ? '' : 'none';
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      hint.textContent = 'Разведите пальцы, чтобы увеличить. Сведите, чтобы уменьшить.';
+    }
+  });
+  observer.observe(dialog, { attributes: true, attributeFilter: ['open'] });
+  observer.observe(image, { attributes: true, attributeFilter: ['src'] });
+  dialog.addEventListener('close', () => zoomTo(1, 0, 0));
+
+  dialog.addEventListener('wheel', (event) => {
+    const delta = event.deltaY || event.deltaX;
+    if (hint.hidden || !event.shiftKey || !delta) return;
+    event.preventDefault();
+    changeZoom(-Math.sign(delta), event.clientX, event.clientY);
+  }, { passive: false });
+
+  let drag;
+  image.addEventListener('dragstart', (event) => event.preventDefault());
+  image.addEventListener('pointerdown', (event) => {
+    if (event.pointerType !== 'mouse' || event.button !== 0 || scale <= 1) return;
+    event.preventDefault();
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    image.setPointerCapture(event.pointerId);
+    image.dataset.dragging = '';
+  });
+  image.addEventListener('pointermove', (event) => {
+    if (!drag || event.pointerId !== drag.id || scale <= 1) return;
+    offsetX += event.clientX - drag.x;
+    offsetY += event.clientY - drag.y;
+    drag.x = event.clientX;
+    drag.y = event.clientY;
+    zoomTo(scale, 0, 0);
+  });
+  image.addEventListener('lostpointercapture', () => {
+    drag = undefined;
+    delete image.dataset.dragging;
+  });
+
+  let gesture;
+  function touchPosition(touches) {
+    const first = touches[0];
+    const second = touches[1];
+    return second
+      ? { x: (first.clientX + second.clientX) / 2, y: (first.clientY + second.clientY) / 2,
+          distance: Math.hypot(first.clientX - second.clientX, first.clientY - second.clientY) }
+      : { x: first.clientX, y: first.clientY, distance: 0 };
+  }
+
+  function trackTouches(event) {
+    gesture = !hint.hidden && event.touches.length ? touchPosition(event.touches) : undefined;
+  }
+
+  dialog.addEventListener('touchstart', trackTouches);
+  dialog.addEventListener('touchend', trackTouches);
+  dialog.addEventListener('touchcancel', () => { gesture = undefined; });
+  dialog.addEventListener('touchmove', (event) => {
+    if (hint.hidden || !gesture || !event.touches.length) return;
+    const next = touchPosition(event.touches);
+    if (next.distance && gesture.distance) {
+      const rect = image.getBoundingClientRect();
+      const maxScale = Math.max(1, image.naturalWidth / image.offsetWidth);
+      const target = Math.min(maxScale, Math.max(1, scale * next.distance / gesture.distance));
+      zoomTo(target, gesture.x - rect.left + offsetX, gesture.y - rect.top + offsetY);
+    }
+    if (scale > 1) {
+      offsetX += next.x - gesture.x;
+      offsetY += next.y - gesture.y;
+      zoomTo(scale, 0, 0);
+    }
+    gesture = next;
+  });
+
+  dialog.addEventListener('keydown', (event) => {
+    if (hint.hidden || event.ctrlKey || event.metaKey) return;
+    if (event.key === '0') {
+      event.preventDefault();
+      zoomTo(1, 0, 0);
+    } else if (['+', '=', '-', '−'].includes(event.key)) {
+      event.preventDefault();
+      changeZoom(['+', '='].includes(event.key) ? 1 : -1, dialog.clientWidth / 2, dialog.clientHeight / 2);
+    }
+  });
+}
+</script>
+
+<style is:global>
+html.has-cursor [data-image-viewer][open] img[data-zoomed], [data-image-viewer][open] img[data-zoomed] { cursor: grab !important; }
+html.has-cursor [data-image-viewer][open] img[data-dragging], [data-image-viewer][open] img[data-dragging] { cursor: grabbing !important; }
+</style>
+
+<style>
   :global(html:has(dialog[data-image-viewer][open])) {
     overflow: hidden;
   }
@@ -133,7 +251,8 @@ const backHref = from === '/' ? url('/') : url('/work');
     cursor: auto !important;
   }
 
-  :global(html.has-cursor dialog[data-image-viewer][open] [data-image-close]) {
+  :global(html.has-cursor dialog[data-image-viewer][open] [data-image-close]),
+  :global(html.has-cursor [data-scroll-top]) {
     cursor: pointer !important;
   }
 
