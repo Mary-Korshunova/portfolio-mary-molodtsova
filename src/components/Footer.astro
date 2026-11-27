@@ -3,10 +3,10 @@ import { person, telegramUrl, url } from '../data/site';
 ---
 
 <footer class="relative z-10 border-t border-line px-5 py-8 text-sm text-muted md:px-10">
-  <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  <div class="mx-auto flex max-w-[1240px] flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <p>© {new Date().getFullYear()} {person.name}</p>
     <ul class="flex flex-wrap items-center gap-x-6 gap-y-3">
-      <li><a class="link-line hover:text-fg" href={telegramUrl} target="_blank" rel="noopener">Написать в телеграм</a></li>
+      <li><a class="link-line hover:text-fg" href={telegramUrl} target="_blank" rel="noopener">Телеграм</a></li>
       <li><a class="link-line hover:text-fg" href={url('/resume')}>Резюме</a></li>
     </ul>
   </div>

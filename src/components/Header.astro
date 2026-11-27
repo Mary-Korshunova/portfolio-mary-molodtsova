@@ -11,7 +11,7 @@ const isActive = (href: string) => current === href || current.startsWith(href +
     class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-bg/95 via-bg/70 to-transparent"
   >
   </div>
-  <div class="flex items-center justify-between gap-6">
+  <div class="mx-auto flex max-w-[1240px] items-center justify-between gap-6">
     <div class="flex items-baseline gap-8 whitespace-nowrap text-[15px]">
       <a href={url('/')} class="font-medium tracking-tight">{person.name}</a>
     </div>
@@ -30,14 +30,7 @@ const isActive = (href: string) => current === href || current.startsWith(href +
       }
     </nav>
 
-    <div class="flex items-center gap-3">
-      <a
-        href={url('/resume')}
-        aria-current={isActive('/resume') ? 'page' : undefined}
-        class="inline-flex rounded-full bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-transform duration-300 hover:scale-[1.04]"
-      >
-        Резюме
-      </a>
+    <div class="md:hidden">
       <button
         type="button"
         class="relative grid size-10 place-items-center md:hidden"
@@ -58,12 +51,11 @@ const isActive = (href: string) => current === href || current.startsWith(href +
     data-menu
   >
     <nav class="flex flex-col gap-2" aria-label="Мобильная навигация">
-      <a href={url('/')} class="display text-5xl">Главная</a>
       {nav.map((item) => <a href={url(item.href)} class="display text-5xl">{item.label}</a>)}
     </nav>
     <div class="flex flex-col gap-10">
       <a href={telegramUrl} target="_blank" rel="noopener" class="rounded-full bg-fg px-6 py-4 text-center font-medium text-bg">
-        Написать в телеграм
+        Телеграм
       </a>
       <CopyEmail class="self-center text-center text-muted" />
     </div>

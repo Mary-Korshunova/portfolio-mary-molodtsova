@@ -7,6 +7,8 @@ export const person = {
 
 export const telegramUrl = `https://t.me/${person.telegram}`;
 
+export const linkedinUrl = 'https://www.linkedin.com/in/мария-коршунова-8704a8365';
+
 export const experienceLabel = '3+ года';
 
 export const facts = [
@@ -20,6 +22,7 @@ export const nav = [
   { href: '/work', label: 'Все работы' },
   { href: '/about', label: 'Обо мне' },
   { href: '/contacts', label: 'Контакты' },
+  { href: '/resume', label: 'Резюме' },
 ];
 
 /** Ссылка с учётом подпапки GitHub Pages. */
