@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import CaseGrid from '../components/CaseGrid.astro';
 import ContactCta from '../components/ContactCta.astro';
-import { facts, person, telegramUrl, url } from '../data/site';
+import { url } from '../data/site';
 
 const caseOrder = ['online-account', 'katusha-max', 'business-registration', 'credit-line'];
 const cases = await getCollection('cases');
@@ -19,13 +19,6 @@ const heading = [
 
 <Base>
   <section class="px-5 pt-32 md:px-10 md:pt-[8.75rem]">
-    <div class="mb-6 flex items-center gap-4">
-      <img src={url('/assets/about/maria-portrait.webp')} width="64" height="64" alt="" class="rounded-xl" />
-      <div>
-        <p class="font-semibold">{person.name}</p>
-        <p class="text-sm text-muted">{person.role}</p>
-      </div>
-    </div>
     <h1 class="display text-[clamp(2.2rem,4.7vw,4.75rem)]">
       {
         heading.map((line, i) => (
@@ -35,20 +28,6 @@ const heading = [
         ))
       }
     </h1>
-    <nav aria-label="Резюме и контакты" class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
-      <a href={url('/resume')} class="rounded-full bg-fg px-4 py-2 font-semibold text-bg">Резюме</a>
-      <a href={telegramUrl} class="underline underline-offset-4">Telegram</a>
-      <a href={`mailto:${person.email}`} class="underline underline-offset-4">Почта</a>
-    </nav>
-
-    <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-7 border-y border-line py-6 md:mt-16 lg:grid-cols-4" data-reveal>
-      {facts.map((fact) => (
-        <div>
-          <dt class="eyebrow">{fact.label}</dt>
-          <dd class="mt-2 text-[15px] leading-snug">{fact.value}</dd>
-        </div>
-      ))}
-    </dl>
   </section>
 
   <section class="px-5 pb-10 pt-8 md:px-10 md:pb-16 md:pt-12" aria-label="Кейсы">

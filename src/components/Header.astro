@@ -33,12 +33,11 @@ const isActive = (href: string) => current === href || current.startsWith(href +
 
     <div class="flex items-center gap-3">
       <a
-        href={telegramUrl}
-        target="_blank"
-        rel="noopener"
-        class="hidden rounded-full bg-fg px-5 py-2.5 text-sm font-medium text-bg transition-transform duration-300 hover:scale-[1.04] sm:inline-flex"
+        href={url('/resume')}
+        aria-current={isActive('/resume') ? 'page' : undefined}
+        class="inline-flex rounded-full bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-transform duration-300 hover:scale-[1.04]"
       >
-        Написать мне
+        Резюме
       </a>
       <button
         type="button"

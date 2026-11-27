@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { experienceLabel, person, telegramUrl, url } from '../data/site';
+import { experienceLabel, facts, person, telegramUrl, url } from '../data/site';
 
 // Источник: резюме hh.ru (май 2025), обновлено на фамилию Молодцова.
 // Телефон, дату рождения и адрес не публикуем.
@@ -128,12 +128,22 @@ const skills = [
 
 <Base title="Резюме" description="Резюме Марии Молодцовой: продуктовый дизайнер, опыт в банке и CRM.">
   <section class="resume px-5 pt-32 md:px-10 md:pt-44">
-    <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-      <div data-reveal>
-        <h1 class="display text-[clamp(2.6rem,7vw,6.5rem)]">{person.name}</h1>
-        <p class="mt-4 text-lg text-muted">{person.role} · Москва · удалённо или&nbsp;гибрид</p>
+    <div class="flex items-center gap-4" data-reveal>
+      <img src={url('/assets/about/maria-portrait.webp')} width="64" height="64" alt="" class="shrink-0 rounded-xl" />
+      <div>
+        <h1 class="display text-2xl md:text-4xl">{person.name}</h1>
+        <p class="mt-1 text-muted">{person.role}</p>
       </div>
     </div>
+
+    <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-7 border-y border-line py-6 md:mt-16 lg:grid-cols-4" data-reveal>
+      {facts.map((fact) => (
+        <div>
+          <dt class="eyebrow">{fact.label}</dt>
+          <dd class="mt-2 text-[15px] leading-snug">{fact.value}</dd>
+        </div>
+      ))}
+    </dl>
 
     <p class="mt-8 hidden text-sm print:block">{person.email} · t.me/{person.telegram}</p>
 
