@@ -15,7 +15,7 @@ const { title, excerpt, org, cover, coverImage, comingSoon } = item.data;
 
 <a
   href={`${url(`/work/${item.id}`)}?from=${encodeURIComponent(fromPath)}`}
-  class="block"
+  class="group block"
   data-reveal
   data-case
   data-year={caseYears(item.data).join('|')}
@@ -23,7 +23,7 @@ const { title, excerpt, org, cover, coverImage, comingSoon } = item.data;
   data-org={org}
   data-format={item.data.format}
 >
-  <div data-cursor="view" class="relative">
+  <div data-cursor="view" class="relative motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-[1.012]">
     {
       coverImage ? (
         <img src={url(coverImage)} alt={cover} loading="lazy" class="block h-auto w-full rounded-[4px]" />

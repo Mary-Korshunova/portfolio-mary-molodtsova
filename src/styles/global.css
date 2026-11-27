@@ -189,3 +189,9 @@ img {
     animation-duration: 0.01ms !important;
   }
 }
+
+.action {
+  @apply inline-flex min-h-11 items-center justify-center rounded-full border px-4 py-2 text-center font-sans text-sm leading-5 font-medium transition-colors;
+}
+.action-primary { @apply border-transparent bg-white text-bg hover:bg-white/90; }
+.action-secondary { @apply border-fg/30 hover:border-fg; }

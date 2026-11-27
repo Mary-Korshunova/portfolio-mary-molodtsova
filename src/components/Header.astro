@@ -54,7 +54,7 @@ const isActive = (href: string) => current === href || current.startsWith(href +
       {nav.map((item) => <a href={url(item.href)} class="display text-5xl">{item.label}</a>)}
     </nav>
     <div class="flex flex-col gap-10">
-      <a href={telegramUrl} target="_blank" rel="noopener" class="rounded-full bg-fg px-6 py-4 text-center font-medium text-bg">
+      <a href={telegramUrl} target="_blank" rel="noopener" class="action action-primary">
         Телеграм
       </a>
       <CopyEmail class="self-center text-center text-muted" />

@@ -43,7 +43,7 @@ const backHref = from === '/' ? url('/') : url('/work');
         {meta.map((m) => <div><dt class="eyebrow">{m.label}</dt><dd class="mt-2 text-[15px]">{m.value}</dd></div>)}
       </dl>
     </header>
-    <div class="prose-case mx-auto max-w-[44rem] px-5 py-16 md:py-24" data-case-content>
+    <div class="prose-case max-w-[46rem] px-5 py-16 md:px-10 md:py-24" data-case-content>
       <Content />
       {d.coverImage && d.showCoverInCase && prototypes.length === 0 && (
         <figure>

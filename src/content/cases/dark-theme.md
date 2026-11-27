@@ -41,5 +41,3 @@ showCoverInCase: false
 ![Рабочие макеты тёмной темы для веба, iOS и Android](../../assets/cases/dark-theme/work-in-progress.png)
 
 <p class="text-sm text-muted">Отрезок рабочего процесса</p>
-
-К сожалению, файл с таблицей переменных и подбором цветов сохранить не удалось.

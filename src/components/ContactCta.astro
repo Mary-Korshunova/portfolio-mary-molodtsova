@@ -18,11 +18,11 @@ const { compact = false } = Astro.props;
       href={telegramUrl}
       target="_blank"
       rel="noopener"
-      class="rounded-full bg-fg px-6 py-3.5 text-sm font-medium text-bg transition-transform duration-300 hover:scale-[1.04]"
+      class="action action-primary"
     >
       Телеграм
     </a>
-    <a href={url('/resume')} class="rounded-full border border-fg/30 px-6 py-3.5 text-sm transition-colors hover:border-fg">
+    <a href={url('/resume')} class="action action-secondary">
       Резюме
     </a>
   </div>
