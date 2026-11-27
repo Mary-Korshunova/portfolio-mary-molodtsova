@@ -36,6 +36,26 @@ const fullTitle = title ? `${title} — ${person.name}` : `${person.name} — ${
     </script>
   </head>
   <body class="overflow-x-hidden">
+    {import.meta.env.PROD && (
+      <>
+        <script is:inline>
+          window.ym = window.ym || function () {
+            (window.ym.a = window.ym.a || []).push(arguments);
+          };
+          window.ym.l = Date.now();
+          const tag = document.createElement('script');
+          tag.async = true;
+          tag.src = 'https://mc.yandex.ru/metrika/tag.js?id=114720718';
+          document.head.appendChild(tag);
+          window.ym(114720718, 'init', {
+            ssr: true, webvisor: true, clickmap: true, ecommerce: 'dataLayer',
+            referrer: document.referrer, url: location.href,
+            accurateTrackBounce: true, trackLinks: true
+          });
+        </script>
+        <noscript><img src="https://mc.yandex.ru/watch/114720718" style="position:absolute; left:-9999px;" alt="" /></noscript>
+      </>
+    )}
     <Starfield />
     <Header />
     <main id="main" class="relative z-10">
