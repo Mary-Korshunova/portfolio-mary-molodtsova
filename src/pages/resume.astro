@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { experienceLabel, facts, person, telegramUrl, url } from '../data/site';
+import { facts, person, telegramUrl, url } from '../data/site';
 
 // Источник: резюме hh.ru (май 2025), обновлено на фамилию Молодцова.
 // Телефон, дату рождения и адрес не публикуем.
@@ -161,11 +161,11 @@ const skills = [
         Скачать в PDF
       </a>
       <a href={telegramUrl} target="_blank" rel="noopener" class="rounded-full border border-line px-6 py-3.5 text-sm hover:border-fg/40">
-        Написать в Telegram
+        Написать в телеграм
       </a>
     </div>
 
-    <h2 class="eyebrow mt-20 border-t border-line pt-6" data-reveal>Опыт · {experienceLabel}</h2>
+    <h2 class="eyebrow mt-20 border-t border-line pt-6" data-reveal>Опыт работы</h2>
     <div class="divide-y divide-line">
       {
         experience.map((job) => (
