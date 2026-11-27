@@ -17,7 +17,7 @@ export const facts = [
 ];
 
 export const nav = [
-  { href: '/work', label: 'Работы' },
+  { href: '/work', label: 'Все работы' },
   { href: '/about', label: 'Обо мне' },
   { href: '/contacts', label: 'Контакты' },
 ];

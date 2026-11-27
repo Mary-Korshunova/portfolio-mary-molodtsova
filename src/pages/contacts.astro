@@ -1,10 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import CopyEmail from '../components/CopyEmail.astro';
-import { telegramUrl, url } from '../data/site';
+import { person, telegramUrl, url } from '../data/site';
 
 const links = [
-  { label: 'Telegram', value: 'Написать в телеграм', href: telegramUrl, external: true },
+  { label: 'Telegram', value: `@${person.telegram}`, href: telegramUrl, external: true },
   { label: 'Резюме', value: 'Смотреть резюме', href: url('/resume') },
 ];
 const rowValue = 'whitespace-nowrap text-[min(6.2cqi,1.4rem)] md:text-[clamp(1.4rem,3.6vw,3rem)] font-light tracking-tight';
