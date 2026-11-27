@@ -9,7 +9,9 @@ platforms: ["Веб"]
 format: "Сервис"
 comingSoon: true
 order: 11
-cover: "Обложка кейса появится позже"
+cover: "Макеты личного кабинета агента"
+coverImage: "/assets/previews/agent-account.webp"
+showCoverInCase: false
 ---
 
 ## О проекте

@@ -23,7 +23,7 @@ const { title, excerpt, org, cover, coverImage, comingSoon } = item.data;
   data-org={org}
   data-format={item.data.format}
 >
-  <div data-cursor="view">
+  <div data-cursor="view" class="relative">
     {
       coverImage ? (
         <img src={url(coverImage)} alt={cover} loading="lazy" class="block h-auto w-full rounded-[4px]" />
@@ -33,6 +33,11 @@ const { title, excerpt, org, cover, coverImage, comingSoon } = item.data;
         <Placeholder caption={cover} ratio={ratio} />
       )
     }
+    {comingSoon && coverImage && (
+      <span class="absolute left-3 top-3 rounded-full bg-[#201e24] px-4 py-1.5 text-sm font-semibold text-white">
+        Скоро
+      </span>
+    )}
   </div>
   <h3 class="mt-6 text-xl font-normal tracking-tight md:text-[1.375rem]">
     {title} <span class="whitespace-nowrap text-muted"><span aria-hidden="true">•</span> {caseYearLabel(item.data)}</span>

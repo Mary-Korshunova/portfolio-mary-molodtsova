@@ -9,7 +9,9 @@ format: "Сервис"
 home: false
 comingSoon: true
 order: 2
-cover: "Обложка кейса появится позже"
+cover: "Макеты открытия счёта для ИП"
+coverImage: "/assets/previews/business-account.webp"
+showCoverInCase: false
 ---
 
 ## О проекте
