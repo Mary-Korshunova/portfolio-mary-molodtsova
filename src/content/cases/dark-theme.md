@@ -9,6 +9,8 @@ format: "Мессенджер"
 home: false
 order: 8
 cover: "Обложка: один и тот же экран чата в светлой и тёмной теме рядом"
+previewLayer: "/assets/previews/layers/dark-theme.png"
+previewColor: "#ECE4DC"
 coverImage: "/assets/previews/dark-theme.webp"
 showCoverInCase: false
 ---

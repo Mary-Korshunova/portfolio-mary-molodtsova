@@ -73,18 +73,14 @@ html.has-cursor * {
   color: var(--color-muted);
 }
 
-/* Появление блоков при прокрутке. Работает только при включённом JS (класс .js на <html>). */
-.js [data-reveal] {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.9s var(--ease-out-soft),
-    transform 0.9s var(--ease-out-soft);
-  transition-delay: var(--reveal-delay, 0ms);
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal].is-in {
+    animation: reveal-block 0.9s var(--ease-out-soft) var(--reveal-delay, 0ms);
+  }
 }
-.js [data-reveal].is-in {
-  opacity: 1;
-  transform: none;
+@keyframes reveal-block {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
 }
 
 /* Заглушка изображения с подписью, что должно быть на месте */

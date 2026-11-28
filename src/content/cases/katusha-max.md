@@ -9,6 +9,8 @@ format: "Мессенджер"
 home: true
 order: 4
 cover: "Превью прототипа Катюши в MAX: мобильный и десктопный интерфейсы"
+previewLayer: "/assets/previews/layers/katusha-max.png"
+previewBackgroundImage: "/assets/previews/layers/claude.png"
 coverImage: "/assets/previews/katusha-max.png"
 ---
 

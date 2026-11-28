@@ -19,6 +19,9 @@ const cases = defineCollection({
     // Подпись к заглушке обложки — что должно быть на картинке.
     cover: z.string(),
     // Путь к реальной обложке в public/covers/, когда она появится.
+    previewLayer: z.string().optional(),
+    previewBackgroundImage: z.string().optional(),
+    previewColor: z.string().optional(),
     coverImage: z.string().optional(),
     showCoverInCase: z.boolean().default(true),
   }),

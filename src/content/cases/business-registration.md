@@ -11,7 +11,9 @@ format: "Сервис"
 home: true
 order: 3
 cover: "Обложка: экраны регистрации ИП в мобильном приложении (2–3 телефона)"
-coverImage: "/assets/previews/business-registration.png"
+previewLayer: "/assets/previews/layers/business-registration.png"
+previewColor: "#28252C"
+coverImage: /assets/previews/layers/business-registration.png
 showCoverInCase: false
 ---
 

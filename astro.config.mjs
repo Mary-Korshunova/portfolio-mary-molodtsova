@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, passthroughImageService } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 // Сайт живёт на GitHub Pages в подпапке репозитория.
@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://mary-korshunova.github.io',
   base: '/portfolio-mary-molodtsova',
+  image: { service: passthroughImageService() },
   trailingSlash: 'ignore',
   // Панель разработчика Astro внизу экрана в режиме npm run dev — не нужна.
   devToolbar: { enabled: false },

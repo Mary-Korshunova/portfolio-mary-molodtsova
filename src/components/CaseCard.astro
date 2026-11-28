@@ -10,7 +10,7 @@ interface Props {
   fromPath?: string;
 }
 const { item, ratio = '8 / 11', fromPath = '/work' } = Astro.props;
-const { title, excerpt, org, cover, coverImage, comingSoon } = item.data;
+const { title, excerpt, org, cover, coverImage, previewLayer, previewBackgroundImage, previewColor, comingSoon } = item.data;
 ---
 
 <a
@@ -23,9 +23,12 @@ const { title, excerpt, org, cover, coverImage, comingSoon } = item.data;
   data-org={org}
   data-format={item.data.format}
 >
-  <div data-cursor="view" class="relative motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-[1.012]">
+  <div data-cursor="view" class="relative overflow-hidden rounded-[4px] bg-cover bg-center"
+    style={{ backgroundColor: previewColor, backgroundImage: previewBackgroundImage && `url(${url(previewBackgroundImage)})` }}>
     {
-      coverImage ? (
+      previewLayer ? (
+        <img src={url(previewLayer)} alt={cover} loading="lazy" class="block h-auto w-full motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-[1.012]" />
+      ) : coverImage ? (
         <img src={url(coverImage)} alt={cover} loading="lazy" class="block h-auto w-full rounded-[4px]" />
       ) : comingSoon ? (
         <div class="grid aspect-video place-items-center rounded-[4px] bg-[#201e24] text-lg">Скоро</div>
